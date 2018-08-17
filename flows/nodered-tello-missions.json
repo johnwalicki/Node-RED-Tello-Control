@@ -38,7 +38,7 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "takeoff,0\ndown,50\ncw,360\nforward,20\nback,20\nccw,360\nright,20\nleft,20\nland,0",
+        "template": "command,0\ntakeoff,0\ndown,50\ncw,360\nforward,20\nback,20\nccw,360\nright,20\nleft,20\nland,0",
         "x": 310,
         "y": 280,
         "wires": [
@@ -54,7 +54,7 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "takeoff,0\ndown,50\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nland,0",
+        "template": "command,0\ntakeoff,0\ndown,50\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nland,0",
         "x": 290,
         "y": 160,
         "wires": [
@@ -152,7 +152,7 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "takeoff,0\nflip,f\nland,0",
+        "template": "command,0\ntakeoff,0\nflip,f\nland,0",
         "x": 290,
         "y": 240,
         "wires": [
