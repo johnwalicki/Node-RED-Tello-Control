@@ -1,0 +1,233 @@
+[
+    {
+        "id": "392633aa.83a6c4",
+        "type": "tab",
+        "label": "Tello Missions",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5e0f28ec.d3106",
+        "type": "inject",
+        "z": "392633aa.83a6c4",
+        "name": "Run Mission",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "d43186ee.210938",
+                "f99853e5.f181a",
+                "b3911c2a.600c18",
+                "ab56cb43.745fa"
+            ]
+        ]
+    },
+    {
+        "id": "d43186ee.210938",
+        "type": "template",
+        "z": "392633aa.83a6c4",
+        "name": "Custom Path",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "takeoff,0\ndown,50\ncw,360\nforward,20\nback,20\nccw,360\nright,20\nleft,20\nland,0",
+        "x": 310,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f99853e5.f181a",
+        "type": "template",
+        "z": "392633aa.83a6c4",
+        "name": "Box",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "takeoff,0\ndown,50\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nland,0",
+        "x": 290,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a0006604.b05fa8",
+        "type": "comment",
+        "z": "392633aa.83a6c4",
+        "name": "3 - Run a Pre-Programmed Mission Path",
+        "info": "Enter the commands in the \"Path\" template node\nas comma separated pairs \ncommand,distance",
+        "x": 600,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "b8337bdd.902fc8",
+        "type": "csv",
+        "z": "392633aa.83a6c4",
+        "name": "Split",
+        "sep": ",",
+        "hdrin": false,
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "tellocmd,distance",
+        "skip": 0,
+        "x": 490,
+        "y": 220,
+        "wires": [
+            [
+                "17f2a363.03fafd"
+            ]
+        ]
+    },
+    {
+        "id": "17f2a363.03fafd",
+        "type": "delay",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 660,
+        "y": 220,
+        "wires": [
+            [
+                "5137e25d.2f7ea4",
+                "3aaf269d.07310a"
+            ]
+        ]
+    },
+    {
+        "id": "81c7d53.0a45128",
+        "type": "comment",
+        "z": "392633aa.83a6c4",
+        "name": "1 - Connect to TELLO-NNNNNN WiFi",
+        "info": "",
+        "x": 300,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "b3911c2a.600c18",
+        "type": "template",
+        "z": "392633aa.83a6c4",
+        "name": "Simple",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "command,0\ntakeoff,0\ndown,110\ncw,360\nland,0",
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "b8337bdd.902fc8"
+            ]
+        ]
+    },
+    {
+        "id": "ab56cb43.745fa",
+        "type": "template",
+        "z": "392633aa.83a6c4",
+        "name": "Flip",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "takeoff,0\nflip,f\nland,0",
+        "x": 290,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10d5237f.8bdf95",
+        "type": "comment",
+        "z": "392633aa.83a6c4",
+        "name": "2 - Construct a programmed path",
+        "info": "",
+        "x": 290,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "22032260.f6c12e",
+        "type": "udp out",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 640,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "5137e25d.2f7ea4",
+        "type": "function",
+        "z": "392633aa.83a6c4",
+        "name": "Send Individual Tello Commands",
+        "func": "var telloaction ;\n\nif( msg.payload.distance != \"0\") {\n   telloaction = new Buffer( msg.payload.tellocmd + ' '+ msg.payload.distance );\n} else {\n   telloaction = new Buffer( msg.payload.tellocmd );\n}\n\nmsg.payload = telloaction;\t\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 360,
+        "wires": [
+            [
+                "22032260.f6c12e",
+                "5ddf847a.2658f4"
+            ]
+        ]
+    },
+    {
+        "id": "5ddf847a.2658f4",
+        "type": "debug",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 610,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3aaf269d.07310a",
+        "type": "debug",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 870,
+        "y": 220,
+        "wires": []
+    }
+]
