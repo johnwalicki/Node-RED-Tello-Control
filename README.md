@@ -29,3 +29,9 @@ ___
 
 ![Tello Missions Flow](/screenshots/NodeRED-Tello-Missions-flow.png?raw=true "Tello Missions flow")
 ___
+### Node-RED Tello Dashboard Example
+* This [flow](/flows/nodered-tello-dashboard.json) reads the telemetry data from the drone and plots some of the data in a Node-RED Dashboard.
+
+![Tello Dashboard Gauges](/screenshots/NodeRED-Tello-Dashboard-gauges.png?raw=true "Tello Dashboard gauges")
+![Tello Dashboard Flow](/screenshots/NodeRED-Tello-Dashboard-flow.png?raw=true "Tello Dashboard flow")
+___
