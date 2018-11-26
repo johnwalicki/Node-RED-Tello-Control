@@ -19,7 +19,7 @@
         "once": false,
         "onceDelay": 0.1,
         "x": 110,
-        "y": 220,
+        "y": 180,
         "wires": [
             [
                 "d43186ee.210938",
@@ -40,7 +40,7 @@
         "syntax": "mustache",
         "template": "command,0,1000\ntakeoff,0\ndown,50\ncw,360\nforward,20\nback,20\nccw,360\nright,20\nleft,20\nland,0",
         "x": 310,
-        "y": 280,
+        "y": 240,
         "wires": [
             []
         ]
@@ -54,9 +54,9 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "command,0,1000\ntakeoff,0\ndown,50\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nforward,20\ncw,90\nland,0",
+        "template": "command,0,250\ntakeoff,0\nup,50,1000\ndown,50\nforward,100,1000\ncw,90\nforward,100,1000\ncw,90\nforward,100,1000\ncw,90\nforward,100,1000\ncw,90\nland,0",
         "x": 290,
-        "y": 160,
+        "y": 120,
         "wires": [
             []
         ]
@@ -66,8 +66,8 @@
         "type": "comment",
         "z": "392633aa.83a6c4",
         "name": "3 - Run a Pre-Programmed Mission Path",
-        "info": "Enter the commands in the \"Path\" template node\nas comma separated pairs \ncommand,distance",
-        "x": 590,
+        "info": "Enter the commands in the \"Path\" template nodes\nas comma separated commands\n\n#1 Always start with\ncommand,0,250\ntakeoff,0\n\n#2 Flight path\ncommand [up,down,right,left,forward, back],distance(cm),time(ms)\n\n#3 Rotation\nc",
+        "x": 630,
         "y": 140,
         "wires": []
     },
@@ -83,36 +83,11 @@
         "ret": "\\n",
         "temp": "tellocmd,distance,time",
         "skip": 0,
-        "x": 490,
-        "y": 220,
+        "x": 650,
+        "y": 180,
         "wires": [
             [
-                "5137e25d.2f7ea4",
-                "e10bc44f.8ef83"
-            ]
-        ]
-    },
-    {
-        "id": "17f2a363.03fafd",
-        "type": "delay",
-        "z": "392633aa.83a6c4",
-        "name": "",
-        "pauseType": "rate",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "5",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "x": 530,
-        "y": 320,
-        "wires": [
-            [
-                "22032260.f6c12e",
-                "5ddf847a.2658f4"
+                "fabeb631.96d04"
             ]
         ]
     },
@@ -123,7 +98,7 @@
         "name": "1 - Connect to TELLO-NNNNNN WiFi",
         "info": "",
         "x": 300,
-        "y": 80,
+        "y": 40,
         "wires": []
     },
     {
@@ -135,13 +110,11 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "command,0,1000\ntakeoff,0\ndown,110\ncw,360\nland,0",
+        "template": "command,0,250\ntakeoff,0\nup,25,5000\nflip,f\ndown,50,2000\nforward,50,4000\nback,50,4000\nleft,50,4000\nright,50,4000\nccw,360\nland,0",
         "x": 290,
-        "y": 200,
+        "y": 160,
         "wires": [
-            [
-                "b8337bdd.902fc8"
-            ]
+            []
         ]
     },
     {
@@ -153,11 +126,13 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "command,0,1000\ntakeoff,0\nflip,f\nland,0",
+        "template": "command,0,250\ntakeoff,0\nup,20,4000\nflip,r,2000\ndown 20,4000\nland,0",
         "x": 290,
-        "y": 240,
+        "y": 200,
         "wires": [
-            []
+            [
+                "10ddf60b.3b81f2"
+            ]
         ]
     },
     {
@@ -167,7 +142,7 @@
         "name": "2 - Construct a programmed path",
         "info": "",
         "x": 290,
-        "y": 120,
+        "y": 80,
         "wires": []
     },
     {
@@ -182,28 +157,87 @@
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 740,
-        "y": 320,
+        "x": 1220,
+        "y": 380,
         "wires": []
     },
     {
-        "id": "5137e25d.2f7ea4",
-        "type": "function",
+        "id": "eeb16f8.9ec989",
+        "type": "inject",
         "z": "392633aa.83a6c4",
-        "name": "Send Individual Tello Commands",
-        "func": "var telloaction ;\n\nif( msg.payload.distance != \"0\") {\n   telloaction = new Buffer( msg.payload.tellocmd + ' '+ msg.payload.distance );\n} else {\n   telloaction = new Buffer( msg.payload.tellocmd );\n}\n\nif( typeof(msg.payload.time) !== 'undefined') {\n    msg.delay = msg.payload.time;\n} else {\n    msg.delay=5000;\n}\n\nmsg.payload = telloaction;\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 710,
-        "y": 220,
+        "name": "Abort Mayday Abort",
+        "topic": "",
+        "payload": "land",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 380,
         "wires": [
             [
-                "17f2a363.03fafd"
+                "7b799182.eec8d8"
             ]
         ]
     },
     {
-        "id": "5ddf847a.2658f4",
+        "id": "7b799182.eec8d8",
+        "type": "change",
+        "z": "392633aa.83a6c4",
+        "name": "Emergency landing!!",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "land",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.distance",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 380,
+        "wires": [
+            [
+                "e92845d4.4b7558"
+            ]
+        ]
+    },
+    {
+        "id": "e92845d4.4b7558",
+        "type": "function",
+        "z": "392633aa.83a6c4",
+        "name": "Send Tello Command",
+        "func": "var telloaction ;\n\nif( msg.payload.distance != \"0\") {\n   telloaction = new Buffer( msg.payload.tellocmd + ' '+ msg.payload.distance );\n} else {\n   telloaction = new Buffer( msg.payload.tellocmd );\n}\n\nmsg.payload = telloaction;\t\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "22032260.f6c12e"
+            ]
+        ]
+    },
+    {
+        "id": "64a592a9.2b56f4",
         "type": "debug",
         "z": "392633aa.83a6c4",
         "name": "",
@@ -211,13 +245,162 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "x": 690,
-        "y": 360,
+        "complete": "false",
+        "x": 1190,
+        "y": 340,
         "wires": []
     },
     {
-        "id": "e10bc44f.8ef83",
+        "id": "81bf35ef.aae38",
+        "type": "change",
+        "z": "392633aa.83a6c4",
+        "name": "increment MissionCmd Counter",
+        "rules": [
+            {
+                "t": "set",
+                "p": "MissionCmd",
+                "pt": "flow",
+                "to": "($flowContext(\"MissionCmd\")+1)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1250,
+        "y": 300,
+        "wires": [
+            [
+                "14627ff3.529858"
+            ]
+        ]
+    },
+    {
+        "id": "a4a27eaf.e1f818",
+        "type": "delay",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "pauseType": "delayv",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1020,
+        "y": 340,
+        "wires": [
+            [
+                "81bf35ef.aae38",
+                "64a592a9.2b56f4",
+                "22032260.f6c12e"
+            ]
+        ]
+    },
+    {
+        "id": "14627ff3.529858",
+        "type": "function",
+        "z": "392633aa.83a6c4",
+        "name": "Send Individual Tello Commands",
+        "func": "var Mission = flow.get(\"Mission\");\nvar i = flow.get(\"MissionCmd\");\nvar telloaction ;\nmsg.payload = Mission[i];\n\nif( i < Mission.length ) {\n    if( Mission[i].distance != \"0\") {\n        telloaction = new Buffer( Mission[i].tellocmd + ' '+ Mission[i].distance );\n    } else {\n       telloaction = new Buffer( Mission[i].tellocmd );\n    }\n\n    if( typeof(Mission[i].time) !== 'undefined') {\n        msg.delay = Mission[i].time;\n    } else {\n        msg.delay=5000;\n    }\n    msg.payload = telloaction;\n    return msg;\n} \n\nreturn null;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1190,
+        "y": 180,
+        "wires": [
+            [
+                "a4a27eaf.e1f818"
+            ]
+        ]
+    },
+    {
+        "id": "10ddf60b.3b81f2",
+        "type": "change",
+        "z": "392633aa.83a6c4",
+        "name": "Initialize Mission",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "Mission",
+                "pt": "flow"
+            },
+            {
+                "t": "set",
+                "p": "MissionCmd",
+                "pt": "flow",
+                "to": "0",
+                "tot": "num"
+            },
+            {
+                "t": "delete",
+                "p": "John",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 180,
+        "wires": [
+            [
+                "b8337bdd.902fc8"
+            ]
+        ]
+    },
+    {
+        "id": "fabeb631.96d04",
+        "type": "function",
+        "z": "392633aa.83a6c4",
+        "name": "Store Tello Mission Commands",
+        "func": "// Load the Mission commands into an flow array\nvar Mission = flow.get(\"Mission\") || [];\nMission.push(msg.payload);\nflow.set(\"Mission\", Mission);\n\n// Load all the Mission Commands and exit\nif( msg.parts.index != (msg.parts.count - 1) ) {\n    return null ; \n}\n// Continue with the flow once the last Mission command has been stored\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 180,
+        "wires": [
+            [
+                "14627ff3.529858",
+                "b85b1d4f.65fe6"
+            ]
+        ]
+    },
+    {
+        "id": "b85b1d4f.65fe6",
+        "type": "change",
+        "z": "392633aa.83a6c4",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Mission",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1140,
+        "y": 120,
+        "wires": [
+            [
+                "3b79d66d.143f4a"
+            ]
+        ]
+    },
+    {
+        "id": "3b79d66d.143f4a",
         "type": "debug",
         "z": "392633aa.83a6c4",
         "name": "",
@@ -225,9 +408,9 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
-        "x": 650,
-        "y": 180,
+        "complete": "false",
+        "x": 1330,
+        "y": 120,
         "wires": []
     }
 ]

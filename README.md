@@ -9,6 +9,7 @@ These Tello Node-RED examples showcase how to:
 - Send individual commands to the Tello Drone
 - Construct a mission flight plan that can be pre-programmed and then sent to
 Tello drone for execution
+- Build a Node-RED Tello Dashboard of control buttons to fly the drone
 - Node-RED Tello Dashboard Example that displays the drone telemetry data
 
 Get the Code by downloading and importing these Node-RED [flows](/flows) into your Node-RED editor.
@@ -30,9 +31,15 @@ ___
 
 ![Tello Missions Flow](/screenshots/NodeRED-Tello-Missions-flow.png?raw=true "Tello Missions flow")
 ___
-### Node-RED Tello Dashboard Example
-- This [flow](/flows/nodered-tello-dashboard.json) reads the telemetry data from the drone and displays some of the data in a Node-RED Dashboard.
+### Node-RED Tello Controls Dashboard Example
+- This [flow](/flows/nodered-tello-controls-dashboard.json) builds a Node-RED dashboard of commands that control the drone.
 
-![Tello Dashboard Gauges](/screenshots/NodeRED-Tello-Dashboard-gauges.png?raw=true "Tello Dashboard gauges")
-![Tello Dashboard Flow](/screenshots/NodeRED-Tello-Dashboard-flow.png?raw=true "Tello Dashboard flow")
+![Tello Controls Dashboard Buttons](/screenshots/NodeRED-Tello-Controls-Dashboard.png?raw=true "Tello Telemetry Dashboard buttons")
+![Tello Controls Dashboard Flow](/screenshots/NodeRED-Tello-Controls-Dash-flow.png?raw=true "Tello Controls Dashboard flow")
+___
+### Node-RED Tello Telemetry Dashboard Example
+- This [flow](/flows/nodered-tello-telemetry.json) reads the telemetry data from the drone and displays some of the data in a Node-RED Dashboard.
+
+![Tello Telemetry Dashboard Gauges](/screenshots/NodeRED-Tello-Telemetry-gauges.png?raw=true "Tello Telemetry Dashboard gauges")
+![Tello Telemetry Dashboard Flow](/screenshots/NodeRED-Tello-Telemetry-flow.png?raw=true "Tello Telemetry Dashboard flow")
 ___
