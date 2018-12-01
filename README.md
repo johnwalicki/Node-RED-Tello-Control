@@ -1,11 +1,42 @@
 # Node-RED-Tello-Control
-Node-RED flows to control the Ryze Tello Drone
+
+Node-RED flows to control the Ryze / DJI Tello Drone
 
 This repository contains Node-RED flow examples that demonstrate how to control
-the [Ryze Tello Drone](https://www.ryzerobotics.com/tello) using the [Node-RED visual editor](http://nodered.org).  This implementation is inspired by the [Tello Scratch node.js example](https://dl-cdn.ryzerobotics.com/downloads/tello/0222/Tello+Scratch+Readme.pdf)
-but does not require those programs.
+the [DJI Drone](https://www.ryzerobotics.com/tello) using the [Node-RED visual editor](http://nodered.org).
 
-These Tello Node-RED examples showcase how to:
+## Introduction
+
+Flying the Tello drone with the Android/iOS mobile apps is amazing fun but the Tello has another fantastic feature.
+The Tello includes a programming interface that developers can use to send commands to control the drone. Programming
+APIs can also receive telemetry and video stream data from the Tello. Ryze and DJI provide
+[SDK programming documentation](https://www.ryzerobotics.com/tello/downloads) to help developers learn how to program
+the drone.  Tello programming has grown so popular that they have released a [Tello EDU](https://www.ryzerobotics.com/tello-edu)
+version that has additional [SDK documentation](https://www.ryzerobotics.com/tello-edu/downloads).
+An entire open source community has formed around programming the Tello. If you are a developer, a good place to start is the
+[TelloPilots](https://tellopilots.com/) forums. There are dozens of [github repositories](https://github.com/topics/tello)
+that have programming examples written in [Python](https://github.com/damiafuentes/DJITelloPy),
+[Go](https://github.com/SMerrony/tello), [Swift](https://github.com/tranchis/TelloSwift) and
+[Node.js](https://github.com/SovGVD/nodetello). This **Node-RED implementation** was inspired by the
+[Tello Scratch node.js example](https://dl-cdn.ryzerobotics.com/downloads/tello/0222/Tello+Scratch+Readme.pdf).
+
+## Pre-Requistes
+Before programming the Tello using Node-RED, several pre-requiste software packages need to be installed.
+- [Node.js Installation Instructions](https://nodejs.org/en/download/)
+- [Node-RED Installation Instructions](https://nodered.org/docs/getting-started/installation)
+
+**Node-RED** is a flow-based programming environment from the JS Foundation. It provides a palette of nodes that allow
+users to very quickly wire up IoT applications that can combine streams of both physical and digital events.
+Its Node.JS runtime is easy to install on both devices and the cloud, and provides a framework for extending its capabilities.
+
+Once Node-RED is installed, several additional Node-RED nodes will be necessary. Install the following nodes using the
+Node-RED Manage Palette:
+- node-red-Dashboard
+
+Learn how to import flows into your Node-RED editor.
+
+## Tello Node-RED Programming Examples
+The Tello Node-RED examples in this repository showcase how to:
 - Send individual commands to the Tello Drone
 - Construct a mission flight plan that can be pre-programmed and then sent to
 Tello drone for execution
