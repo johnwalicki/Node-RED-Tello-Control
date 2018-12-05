@@ -36,7 +36,7 @@ Once Node-RED is installed, several additional Node-RED nodes will be necessary.
 - [node-red-dashboard](https://flows.nodered.org/node/node-red-dashboard) - A set of dashboard nodes for Node-RED
 - [node-red-node-watson](https://flows.nodered.org/node/node-red-node-watson) - A collection of Node-RED nodes for IBM Watson services
 
-Learn how to[import flows](https://github.com/binnes/esp8266Workshop/blob/master/en/part3/NODERED.md#step-4---how-to-import-a-prebuilt-flow-from-github)
+Learn how to [import flows](https://github.com/binnes/esp8266Workshop/blob/master/en/part3/NODERED.md#step-4---how-to-import-a-prebuilt-flow-from-github)
 into your Node-RED editor.
 
 As a reminder, **Safety First!**  Take caution when flying your drone. Fly your drone indoors at your own risk.
