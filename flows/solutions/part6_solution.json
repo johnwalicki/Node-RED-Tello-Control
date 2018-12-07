@@ -2966,7 +2966,7 @@
     "x": 250,
     "y": 940,
     "wires": [
-        ["47222afe.f4a58c"]
+        ["891b9202.c7d458"]
     ]
 }, {
     "id": "ac109a65.fbc1",
@@ -2983,7 +2983,7 @@
     "type": "subflow:affe3b0f.ce0688",
     "z": "3f2fa13.a214e5e",
     "name": "",
-    "x": 530,
+    "x": 850,
     "y": 940,
     "wires": [
         ["701ccf5a.a9ae1"]
@@ -2993,7 +2993,7 @@
     "type": "subflow:412a2357.290644",
     "z": "3f2fa13.a214e5e",
     "name": "",
-    "x": 830,
+    "x": 1150,
     "y": 940,
     "wires": [
         ["9824a688.d0c268"]
@@ -3022,12 +3022,12 @@
     "id": "47222afe.f4a58c",
     "type": "change",
     "z": "3f2fa13.a214e5e",
-    "name": "set 50",
+    "name": "set 100",
     "rules": [{
         "t": "set",
         "p": "payload",
         "pt": "msg",
-        "to": "50",
+        "to": "100",
         "tot": "num"
     }],
     "action": "",
@@ -3035,7 +3035,7 @@
     "from": "",
     "to": "",
     "reg": false,
-    "x": 390,
+    "x": 700,
     "y": 940,
     "wires": [
         ["73bc5906.6f11b"]
@@ -3057,7 +3057,7 @@
     "from": "",
     "to": "",
     "reg": false,
-    "x": 680,
+    "x": 1000,
     "y": 940,
     "wires": [
         ["1cf3d753.ca30b9"]
@@ -3508,6 +3508,61 @@
         ["74982433.2857e4"]
     ]
 }, {
+    "id": "24c7411a.819ba6",
+    "type": "ui_button",
+    "z": "3f2fa13.a214e5e",
+    "name": "",
+    "group": "a4520321.c889b8",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "Patrol",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "purple",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "",
+    "x": 90,
+    "y": 980,
+    "wires": [
+        ["74982433.2857e4"]
+    ]
+}, {
+    "id": "1f513711.e4dfd1",
+    "type": "subflow:412a2357.290644",
+    "z": "3f2fa13.a214e5e",
+    "name": "",
+    "x": 550,
+    "y": 940,
+    "wires": [
+        ["47222afe.f4a58c"]
+    ]
+}, {
+    "id": "891b9202.c7d458",
+    "type": "change",
+    "z": "3f2fa13.a214e5e",
+    "name": "set 5000",
+    "rules": [{
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "2000",
+        "tot": "num"
+    }],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 400,
+    "y": 940,
+    "wires": [
+        ["1f513711.e4dfd1"]
+    ]
+}, {
     "id": "1eefcfb1.386918",
     "type": "ui_group",
     "z": "",
@@ -3546,6 +3601,15 @@
     "order": 3,
     "disp": true,
     "width": "6",
+    "collapse": false
+}, {
+    "id": "a4520321.c889b8",
+    "type": "ui_group",
+    "z": "",
+    "name": "Missions",
+    "tab": "4f30c4f4.dd6eac",
+    "disp": true,
+    "width": "4",
     "collapse": false
 }, {
     "id": "4f30c4f4.dd6eac",
