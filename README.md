@@ -57,6 +57,7 @@ Get the Code by downloading and importing these Node-RED [flows](/flows) into yo
 #### Authors:
 - [John Walicki](https://github.com/johnwalicki/)
 - [Markus Van Kempen](https://github.com/markusvankempen)
+- [Brian Innes](https://github.com/binnes)
 
 ## Node-RED flows in this repository:
 
@@ -102,10 +103,8 @@ ___
 ![Tello Controls Dashboard Buttons](/screenshots/NodeRED-Tello-Controls-Dashboard.png?raw=true "Tello Telemetry Dashboard buttons")
 ![Tello Controls Dashboard Flow](/screenshots/NodeRED-Tello-Controls-Dash-flow.png?raw=true "Tello Controls Dashboard flow")
 ___
-### Node-RED Tello Telemetry Dashboard Example - Experimental
+### Node-RED Tello Telemetry Dashboard Example
 - This [flow](/flows/nodered-tello-telemetry.json) reads the telemetry data from the drone and displays some of the data in a Node-RED Dashboard.
-  - The complete command set of telemetry data has not been fulled documented by Ryze.
-- This flow is experimental and does not fully function. Patches are welcome.
 
 ![Tello Telemetry Dashboard Gauges](/screenshots/NodeRED-Tello-Telemetry-gauges.png?raw=true "Tello Telemetry Dashboard gauges")
 ![Tello Telemetry Dashboard Flow](/screenshots/NodeRED-Tello-Telemetry-flow.png?raw=true "Tello Telemetry Dashboard flow")

@@ -2,272 +2,106 @@
     {
         "id": "eb99d644.4c9a1",
         "type": "tab",
-        "label": "Tello Dashboard",
+        "label": "Tello Telemetry",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "c480d444.574f18",
-        "type": "udp out",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "addr": "192.168.10.1",
-        "iface": "",
-        "port": "8889",
-        "ipv": "udp4",
-        "outport": "52955",
-        "base64": false,
-        "multicast": "false",
-        "x": 1230,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "51db3140.27a4a8",
-        "type": "comment",
-        "z": "eb99d644.4c9a1",
-        "name": "Information on Tello",
-        "info": "Connect to Tello-#WIFI#\nTello has the ip address 192.168.10.1\nand multipe udp ports for communication\nPort 8889 is for control flight command \nand status updates\nPort 6037 is the video port to get the video\n- Markus  - mvk@ca.ibm.com\nhttps://github.com/markusvankempen/\nPort 52955 i define in outgoing and incoming as\nthe receiving port ...\non 52955 the drone will send message back like status message",
-        "x": 750,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "8d94cd33.7c8d5",
-        "type": "function",
-        "z": "eb99d644.4c9a1",
-        "name": "connreq",
-        "func": "//var message = new Buffer( 'conn_req:' );\n//msg.payload = message;\n//return msg;\n\nvar out = Buffer.alloc(11);\nout.write('conn_req:');\nmsg.payload = \tout\t;\t\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 420,
-        "y": 120,
-        "wires": [
-            [
-                "c480d444.574f18"
-            ]
-        ]
-    },
-    {
-        "id": "dde3e5f7.85b018",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Connection Request start here",
-        "topic": "",
-        "payload": "cw360",
-        "payloadType": "str",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 170,
-        "y": 60,
-        "wires": [
-            [
-                "8d94cd33.7c8d5"
-            ]
-        ]
-    },
-    {
-        "id": "6db67b3f.966324",
+        "id": "4b7687ce.076858",
         "type": "udp in",
         "z": "eb99d644.4c9a1",
         "name": "",
         "iface": "",
-        "port": "52955",
+        "port": "8890",
         "ipv": "udp4",
         "multicast": "false",
         "group": "",
-        "datatype": "buffer",
-        "x": 240,
-        "y": 1120,
+        "datatype": "utf8",
+        "x": 220,
+        "y": 900,
         "wires": [
             [
-                "810db5de.687858",
-                "8e3c94c6.978ce8"
+                "4a178e41.51c1b8"
             ]
         ]
     },
     {
-        "id": "8e3c94c6.978ce8",
+        "id": "5ee54866.9c5f28",
         "type": "debug",
         "z": "eb99d644.4c9a1",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "complete": "true",
-        "x": 410,
-        "y": 1180,
-        "wires": []
-    },
-    {
-        "id": "810db5de.687858",
-        "type": "function",
-        "z": "eb99d644.4c9a1",
-        "name": "parse incoming messages",
-        "func": "var TELLO_CMD_ALT_LIMIT = 4182;\nvar TELLO_CMD_LIGHT_STRENGTH = 53;\nvar TELLO_CMD_LOW_BATT_THRESHOLD = 4183;\nvar TELLO_CMD_STATUS = 86;\nvar TELLO_CMD_LOG_HEADER_WRITE = 4176;\nvar TELLO_CMD_LOG_DATA_WRITE = 4177;\nvar TELLO_CMD_LOG_CONFIGURATION = 4178;\nvar seqID ;\nvar pacType;\n\nfunction parsePacket (bb) {\n    //\tvar data = Buffer.from(msg);\n\tvar size = bb.length;\n\tvar payload = bb.slice(9,size);\n\tvar dataSize = 0;\n\tvar cmdID    = 0;\n\n\tif (bb.length >= 11) {\n\t\tvar mark = bb.readUInt8(0);\n\t\tif (mark == 0xCC) {\t// start of packet\n\t\t    size      = bb.readUInt16LE(1) >> 3;\n\t\t    var crc8  = bb.readUInt8(3);\n\t\t    pacType   = bb.readUInt8(4);\n\t\t    cmdID     = bb.readUInt16LE(5);\n\t\t    seqID     = bb.readUInt16LE(7);\n\t        dataSize  = size - 11;\n\t        var data  = false;\n\t        var crc16 = bb.readUInt16LE(size - 2);\n\t\t} \n\t\n\t\tif (cmdID == TELLO_CMD_STATUS) {\n\t\t    //\tthis.parseStatus(bb);\n\t    } else if (cmdID == TELLO_CMD_LOG_HEADER_WRITE) {\n\t\t    node.warn(\"TELLO_CMD_LOG_HEADER_WRITE \" + TELLO_CMD_LOG_HEADER_WRITE)\n\t\t} else if (cmdID == TELLO_CMD_LOG_DATA_WRITE) {\n\t\t    // \n\t\t} else if (cmdID == TELLO_CMD_ALT_LIMIT) {    \n\t\t    node.warn(\"TELLO_CMD_ALT_LIMIT \"+TELLO_CMD_ALT_LIMIT)\n\t\t    if (payload.length > 0) \n\t\t        node.warn(payload.readUInt16LE(1))\n\t\t} else if (cmdID == TELLO_CMD_LIGHT_STRENGTH) {    \n\t\t    node.warn(\"TELLO_CMD_LIGHT_STRENGTH \"+TELLO_CMD_LIGHT_STRENGTH)\n\t\t    // if (payload.length > 0) \n\t\t    node.warn(payload.readUInt16LE(1))\n\t\t    // node.warn(payload)\n\t\t} else if (cmdID == TELLO_CMD_LOW_BATT_THRESHOLD) {    \n\t\t    node.warn(\"TELLO_CMD_LOW_BATT_THRESHOLD \"+TELLO_CMD_LOW_BATT_THRESHOLD)\n\t\t    if (payload.length > 0) \n\t\t\t        node.warn(payload.readUInt16LE(1))\n\t\t} else if (cmdID == 69 ) {    //VERSION\n\t\t\tnode.warn(\"TELLO_CMD_VERSION \"+cmdID)\n\t\t\tnode.warn(payload)\n\t\t\tnode.warn(payload.slice(1,20).toString());\n\t\t} else if (cmdID == TELLO_CMD_LOG_CONFIGURATION) {    \n\t\t    node.warn(\"TELLO_CMD_LOG_CONFIGURATION command detected\");\n\t\t} else {\n\t\t\tnode.warn(\"DBG unknown CMD \"+ cmdID);\n\t\t}\n\t} else {\n\t\tnode.warn('wrong packet', bb);\n\t}\n\treturn cmdID;\n}\n\t\nmsg.cmdID  = parsePacket(msg.payload);\nmsg.seqID  = seqID;\nmsg.pacType= pacType;\nglobal.set(\"tellomsg\",msg)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 470,
-        "y": 1120,
-        "wires": [
-            [
-                "9008fef1.280458",
-                "102aac7.834aa54"
-            ]
-        ]
-    },
-    {
-        "id": "9008fef1.280458",
-        "type": "debug",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "active": true,
-        "console": "false",
-        "complete": "true",
-        "x": 710,
-        "y": 1180,
-        "wires": []
-    },
-    {
-        "id": "102aac7.834aa54",
-        "type": "switch",
-        "z": "eb99d644.4c9a1",
-        "name": "Return Commands",
-        "property": "cmdID",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "4176",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "86",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "4177",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 4,
-        "x": 750,
-        "y": 1120,
-        "wires": [
-            [
-                "fd0bda2c.6fe3e8"
-            ],
-            [
-                "f369ca1b.7b53e"
-            ],
-            [
-                "99348a9a.e420a"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "f369ca1b.7b53e",
-        "type": "function",
-        "z": "eb99d644.4c9a1",
-        "name": "Drone Status",
-        "func": "var status   = {};\nstatus.speed = {};\nstatus.state = {};\nstatus.state.battery = {};\nstatus.state.em     = {};\nstatus.state.imu    = {};\nstatus.fly_time     = {};\nstatus.state.front  = {};\n\nfunction parseStatus(bb) {\n\t//flight data msg (https://github.com/hanyazou/TelloPy/blob/master/tellopy/_internal/protocol.py) 0x56\n\t// just skip first 9 bytes\n\tstatus.speed.vertical = bb.readInt16LE(9);\n\tstatus.speed.north = bb.readInt16LE(11);\n\tstatus.speed.east = bb.readInt16LE(13);\n\tstatus.speed.ground = bb.readInt16LE(15);\n\tstatus.fly_time.time = bb.readInt16LE(17);\n\n\tvar tmp = bb.readInt8(19);\n\tstatus.state.imu.state = (tmp >> 0) & 0x1;\n\tstatus.state.pressure = (tmp >> 1) & 0x1;\n\tstatus.state.down_visual = (tmp >> 2) & 0x1;\n\tstatus.state.power = (tmp >> 3) & 0x1;\n\tstatus.state.battery.state = (tmp >> 4) & 0x1;\n\tstatus.state.gravity = (tmp >> 5) & 0x1;\n\tstatus.state.wind = (tmp >> 7) & 0x1;\n\n\tstatus.state.imu.calibration = bb.readInt8(20);\n\tstatus.state.battery.percentage = bb.readInt8(21);\n\tstatus.state.battery.left = bb.readInt16LE(22);\n\tstatus.state.battery.voltage = bb.readInt16LE(24);\n\n    tmp = bb.readInt8(26);\n\tstatus.state.em.sky = (tmp >> 0) & 0x1;\n\tstatus.state.em.ground = (tmp >> 1) & 0x1;\n\tstatus.state.em.open = (tmp >> 2) & 0x1;\n\tstatus.state.drone_hover = (tmp >> 3) & 0x1;\n\tstatus.state.outage_recording = (tmp >> 4) & 0x1;\n\tstatus.state.battery.low = (tmp >> 5) & 0x1;\n\tstatus.state.battery.lower = (tmp >> 6) & 0x1;\n\tstatus.state.factory_mode = (tmp >> 7) & 0x1;\n\tstatus.state.fly_mode = bb.readInt8(27);\n\tstatus.state.throw_fly_timer = bb.readInt8(28);\n\tstatus.state.camera = bb.readInt8(29);\n\tstatus.state.em.state = bb.readInt8(30);\n\n\ttmp = bb.readInt8(31);\n\tstatus.state.front.in = (tmp >> 0) & 0x1;\n\tstatus.state.front.out = (tmp >> 1) & 0x1;\n\tstatus.state.front.lsc = (tmp >> 2) & 0x1;\n\tstatus.state.temperature_height = bb.readInt8(32);\n\t//console.log(\"state\", status);\n\treturn (status);\n}\n\t\nmsg.status = parseStatus( msg.payload );\nglobal.set(\"tellostatus\", status);\nreturn(msg);",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 990,
-        "y": 1040,
-        "wires": [
-            [
-                "4587ec18.1681f4",
-                "9b9edc5a.8b851",
-                "a145a1f9.e046c8",
-                "f3caa88.08e3558",
-                "445797ed.fcfd5"
-            ]
-        ]
-    },
-    {
-        "id": "4587ec18.1681f4",
-        "type": "debug",
-        "z": "eb99d644.4c9a1",
-        "name": "Status",
-        "active": true,
-        "console": "false",
-        "complete": "true",
-        "x": 1230,
-        "y": 940,
-        "wires": []
-    },
-    {
-        "id": "6693d994.b9c2f",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Display",
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "x": 970,
-        "y": 140,
-        "wires": [
-            [
-                "8f3dfd08.44fc08"
-            ]
-        ]
-    },
-    {
-        "id": "98c4e188.6d53c",
-        "type": "debug",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "payload",
-        "x": 1350,
-        "y": 140,
+        "x": 770,
+        "y": 980,
         "wires": []
     },
     {
-        "id": "99348a9a.e420a",
-        "type": "function",
+        "id": "4a178e41.51c1b8",
+        "type": "delay",
         "z": "eb99d644.4c9a1",
-        "name": "DroneLog",
-        "func": "var status = global.get(\"tellostatus\");\n\nTYPE = {\n\t\tBYTE : 1,\n\t\tSHORT: 2,\n\t\tFLOAT: 3,\n\t};\nvar\tlog = {\n\t\t\tSEPARATOR: 85,\t\t// U symbol\n\t\t\t// Full log spec https://github.com/Kragrathea/TelloLib/blob/master/TelloLib/parsedRecSpecs.json\n\t\t\tLOGREC: {\n\t\t\t\t16: {\n\t\t\t\t\tNAME: \"USONIC\",\n\t\t\t\t\tlength: 4,\n\t\t\t\t\tfields: {\n\t\t\t\t\t\tH: {\n\t\t\t\t\t\t\toffset: 0,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tFLAG: {\n\t\t\t\t\t\t\toffset: 2,\n\t\t\t\t\t\t\ttype: TYPE.BYTE\n\t\t\t\t\t\t},\n\t\t\t\t\t\tCNT: {\n\t\t\t\t\t\t\toffset: 3,\n\t\t\t\t\t\t\ttype: TYPE.BYTE\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t29: {\n\t\t\t\t\tNAME: \"MVO\",\n\t\t\t\t\tlength: 80,\n\t\t\t\t\tfields: {\n\t\t\t\t\t\tVX: {\n\t\t\t\t\t\t\toffset: 2,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tVY: {\n\t\t\t\t\t\t\toffset: 4,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tVZ: {\n\t\t\t\t\t\t\toffset: 6,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tPX: {\n\t\t\t\t\t\t\toffset: 8,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tPY: {\n\t\t\t\t\t\t\toffset: 12,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tPZ: {\n\t\t\t\t\t\t\toffset: 16,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tHEIGHT: {\n\t\t\t\t\t\t\toffset: 68,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t2048: {\n\t\t\t\t\tNAME: \"IMU\",\n\t\t\t\t\tlength: 120,\n\t\t\t\t\tpostprocess: {\n\t\t\t\t\t\tANGLE: {\n\t\t\t\t\t\t\tfunc: false,\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tfields: {\n\t\t\t\t\t\tACC_X: {\n\t\t\t\t\t\t\toffset: 20,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tACC_Y: {\n\t\t\t\t\t\t\toffset: 24,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tACC_Z: {\n\t\t\t\t\t\t\toffset: 28,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tGYRO_X: {\n\t\t\t\t\t\t\toffset: 32,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tGYRO_Y: {\n\t\t\t\t\t\t\toffset: 36,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tGYRO_Z: {\n\t\t\t\t\t\t\toffset: 40,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tPRESS: {\n\t\t\t\t\t\t\toffset: 44,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tQ_W: {\n\t\t\t\t\t\t\toffset: 48,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tQ_X: {\n\t\t\t\t\t\t\toffset: 52,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tQ_Y: {\n\t\t\t\t\t\t\toffset: 56,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tQ_Z: {\n\t\t\t\t\t\t\toffset: 60,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tag_x: {\n\t\t\t\t\t\t\toffset: 64,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tag_y: {\n\t\t\t\t\t\t\toffset: 68,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tag_z: {\n\t\t\t\t\t\t\toffset: 72,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tvg_x: {\n\t\t\t\t\t\t\toffset: 76,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tvg_y: {\n\t\t\t\t\t\t\toffset: 80,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tvg_z: {\n\t\t\t\t\t\t\toffset: 84,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tgb_x: {\n\t\t\t\t\t\t\toffset: 88,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tgb_y: {\n\t\t\t\t\t\t\toffset: 92,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tgb_z: {\n\t\t\t\t\t\t\toffset: 96,\n\t\t\t\t\t\t\ttype: TYPE.FLOAT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tm_x: {\n\t\t\t\t\t\t\toffset: 100,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tm_y: {\n\t\t\t\t\t\t\toffset: 102,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\tm_z: {\n\t\t\t\t\t\t\toffset: 104,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttemp_x: {\n\t\t\t\t\t\t\toffset: 106,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttemp_y: {\n\t\t\t\t\t\t\toffset: 108,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttemp_z: {\n\t\t\t\t\t\t\toffset: 110,\n\t\t\t\t\t\t\ttype: TYPE.SHORT\n\t\t\t\t\t\t},\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t}\n\t\t}\n\nfunction parseLog(bb) {\n    size =  bb.readUInt16LE(1) >> 3;\n\t// https://github.com/Kragrathea/TelloLib/blob/master/TelloLib/TelloLog.cs\n\t// https://github.com/SMerrony/tello/blob/master/flog.go\n\tvar logPosition = 0;\n\tvar logFieldName = \"\";\n\tvar logObject = false;\n\twhile (logPosition < (size-2)) {\n\t\tif (bb.readUInt8(logPosition) != log.SEPARATOR) {\n\t\t\tlogPosition++;\n\t\t\tcontinue;\n\t\t}\n\t\tvar len = bb.readUInt8(logPosition + 1);\n\t\tif (bb.readUInt8(logPosition + 2) !== 0) {\n\t\t\tlogPosition++;\n\t\t\tbreak;\n\t\t}\n\t\tvar recSpecId = bb.readUInt16LE(logPosition + 4);\n\t\tvar xorBuf = Buffer.alloc(256);\n\t\tvar xorValue = bb[logPosition + 6];\n\t\tif (typeof log.LOGREC[recSpecId] != 'undefined') {\n\t\t\t//node.warn(\"DBG found:\", log.LOGREC[recSpecId].NAME);\n\t\t\tfor (var i = 0; i < len; i++) {\t// Decrypt payload\n\t\t\t\txorBuf[i] = (bb[logPosition + i] ^ xorValue);\n\t\t\t}\n\t\t\tvar baseOffset = 10;\n\t\t\tfor (var i in log.LOGREC[recSpecId].fields) { \n\t\t\t    if (typeof log.LOGREC[recSpecId].fields[i] == 'object') {\n    \t\t\t\tlogObject = log.LOGREC[recSpecId].fields[i];\n    \t\t\t\tlogFieldName = log.LOGREC[recSpecId].NAME+\"_\"+i;\n    \t\t\t\tstatus[logFieldName] = 0\n    \t\t\t\tswitch (logObject.type) {\n  \t\t\t\t\t\tcase TYPE.FLOAT:\n\t\t\t\t\t\t\tstatus[logFieldName] = xorBuf.readFloatLE(baseOffset + logObject.offset);\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\tcase TYPE.SHORT:\n\t\t\t\t\t\t\tstatus[logFieldName] = xorBuf.readInt16LE(baseOffset + logObject.offset);\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\tcase TYPE.BYTE:\n\t\t\t\t\t\t\tstatus[logFieldName] = xorBuf[baseOffset + logObject.offset];\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\tdefault:\n\t\t\t\t\t\t    node.warn(\"DBG\", \"unknown type\", logObject.type);\n\t\t\t\t\t}\n    \t\t\t}\n\t\t\t}\n\t\t\tif (typeof log.LOGREC[recSpecId].postprocess == 'object') {\n\t\t\t\tfor (var i in log.LOGREC[recSpecId].postprocess) {\n\t\t\t\t\tif (typeof log.LOGREC[recSpecId].postprocess[i].func == 'function') {\n\t\t\t\t\t\tlog.LOGREC[recSpecId].postprocess[i].func();\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t//console.log(\"STATUS:\", status);\n\t\t//\tsendLog();\n\t\t} else {\n\t\t\t//console.log(\"DBG\", \"unknown log type\", recSpecId, \"datasize = \", dataSize);\n\t\t}\n\tlogPosition += len;\n\t}\n}\n\nparseLog(msg.payload);\n\nmsg.log = log;\nmsg.status = status;\nglobal.set(\"tellostatus\",status);\nglobal.set(\"tellostatusnew\",status);\nglobal.set(\"tellolog\",log);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 980,
-        "y": 1200,
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "2",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 390,
+        "y": 900,
         "wires": [
             [
-                "d0516e3d.b5187",
-                "9b9edc5a.8b851",
-                "a145a1f9.e046c8",
-                "445797ed.fcfd5",
-                "d2ff3044.24d8f8",
-                "96df48ba.d5e47",
-                "c229961c.df5b48",
-                "14b161dd.ad33fe",
-                "76fd8db8.86e1b4",
-                "ff9619bd.7faef",
-                "49b3fcbb.fc3184"
+                "c457be1f.939b7",
+                "844dd20.c9edfb"
             ]
         ]
     },
     {
-        "id": "4ee4c22a.8519dc",
+        "id": "f6264fff.a80d68",
+        "type": "function",
+        "z": "eb99d644.4c9a1",
+        "name": "Parse Status",
+        "func": "// JSONata node performance is better than Function nodes\n// Don't use this function node.\n// Leave here for illustration on parsing the telemetry data\n\n// The telemetry data arrives from the drone as a single string:\n// pitch:0;roll:-1;yaw:0;vgx:0;vgy:0;vgz:0;templ:68;temph:69;tof:10;h:0;bat:90;baro:-39.22;time:0;agx:-3.00;agy:20.00;agz:-995.00;\n\n// Split the telemetry data into a json object that looks like this:\n// { pitch:0, roll:-1, yaw:0, vgx:0, vgy:0, vgz:0, templ:68, temph:69, tof:10, \n//   h:0, bat:90, baro:-39.22, time:0, agx:-3.00, agy:20.00, agz:-995.00 }\n\n// Use String functions to\n// convert the  pitch:0;roll:-1; to \"pitch\":0,\"roll\":-1,\"\n// replace all occurrences of ; with ,\"\n// replace all occurrences of : with \",\nvar state = msg.payload.toString();\n\nvar jsonstr = \"{\\\"\" + state.replace(/;/g, ',\"').replace(/:/g, '\":').slice(0,-4) + \"}\";\n// Now it looks like this:\n// \"{\"pitch\":0,\"roll\":-1,\"yaw\":0,\"vgx\":0,\"vgy\":0,\"vgz\":0,\"templ\":68,\"temph\":69,\"tof\":10,\"h\":0,\"bat\":90,\"baro\":-39.22,\"time\":0,\"agx\":-3.00,\"agy\":20.00,\"agz\":-995.00}\"\n\nmsg.payload = JSON.parse(jsonstr);\nreturn msg;\n\n// Everythiing below this line, works too but is much more complicated.\n\n// Split the string into an array of keypairs\nvar tellostate_array = msg.payload.split(';');\n// 17 string elements in the array [ \"pitch:0\",\"roll:-1\", ... ]\n\n// Maybe there are better techniques...\n// Build a stringified json object\nvar buildjson;\nfor( i=0; i < tellostate_array.length-1; i++) {\n    // split the pitch:0 into a key:keyvalue\n    var keypair = tellostate_array[i].split(\":\");\n    if( i === 0 ) {\n        buildjson = \"{\\\"\"+keypair[0]+\"\\\":\"+keypair[1]+\",\";\n    } else {\n        buildjson = buildjson+\"\\\"\"+keypair[0]+\"\\\":\"+keypair[1]+\",\";\n    }\n}\n// JSON.parse() does not allow trailing commas so strip the last one off\nbuildjson = buildjson.slice(0,-1) + \"}\";\n// Now it looks like this:\n// \"{\"pitch\":0,\"roll\":-1,\"yaw\":0,\"vgx\":0,\"vgy\":0,\"vgz\":0,\"templ\":68,\"temph\":69,\"tof\":10,\"h\":0,\"bat\":90,\"baro\":-39.22,\"time\":0,\"agx\":-3.00,\"agy\":20.00,\"agz\":-995.00}\"\nmsg.payload = JSON.parse(buildjson);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 590,
+        "y": 980,
+        "wires": [
+            [
+                "5ee54866.9c5f28"
+            ]
+        ]
+    },
+    {
+        "id": "a85fce9b.efe538",
+        "type": "inject",
+        "z": "eb99d644.4c9a1",
+        "name": "Sample",
+        "topic": "",
+        "payload": "pitch:0;roll:-1;yaw:0;vgx:0;vgy:0;vgz:0;templ:68;temph:69;tof:10;h:0;bat:90;baro:-39.22;time:0;agx:-3.00;agy:20.00;agz:-995.00;  ",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 410,
+        "y": 980,
+        "wires": [
+            [
+                "f6264fff.a80d68",
+                "844dd20.c9edfb"
+            ]
+        ]
+    },
+    {
+        "id": "1deb8d29.6a2d93",
         "type": "ui_gauge",
         "z": "eb99d644.4c9a1",
         "name": "",
@@ -286,46 +120,12 @@
             "#e6e600",
             "#ca3838"
         ],
-        "x": 1450,
-        "y": 980,
+        "x": 1280,
+        "y": 500,
         "wires": []
     },
     {
-        "id": "613b6166.d120d8",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "c11cc3e3.74adc8",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "GroundSpeed",
-        "label": "GroundSpeed",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "30",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "x": 1470,
-        "y": 1020,
-        "wires": []
-    },
-    {
-        "id": "b916248b.de1a48",
-        "type": "comment",
-        "z": "eb99d644.4c9a1",
-        "name": "Commands",
-        "info": "\t\tcommands: {\n\t\t\tTELLO_CMD_CONN: 1,\n\t\t\tTELLO_CMD_CONN_ACK: 2,\n\t\t\tTELLO_CMD_SSID: 17,\n\t\t\tTELLO_CMD_SET_SSID: 18,\n\t\t\tTELLO_CMD_SSID_PASS: 19,\n\t\t\tTELLO_CMD_SET_SSID_PASS: 20,\n\t\t\tTELLO_CMD_REGION: 21,\n\t\t\tTELLO_CMD_SET_REGION: 22,\n\t\t\tTELLO_CMD_REQ_VIDEO_SPS_PPS: 37,\n\t\t\tTELLO_CMD_TAKE_PICTURE: 48,\n\t\t\tTELLO_CMD_SWITCH_PICTURE_VIDEO: 49,\n\t\t\tTELLO_CMD_START_RECORDING: 50,\n\t\t\tTELLO_CMD_SET_EV: 52,\n\t\t\tTELLO_CMD_DATE_TIME: 70,\n\t\t\tTELLO_CMD_STICK: 80,\n\t\t\tTELLO_CMD_LOG_HEADER_WRITE: 4176,\n\t\t\tTELLO_CMD_LOG_DATA_WRITE: 4177,\n\t\t\tTELLO_CMD_LOG_CONFIGURATION: 4178,\n\t\t\tTELLO_CMD_WIFI_SIGNAL: 26,\n\t\t\tTELLO_CMD_VIDEO_BIT_RATE: 40,\n\t\t\tTELLO_CMD_LIGHT_STRENGTH: 53,\n\t\t\tTELLO_CMD_VERSION_STRING: 69,\n\t\t\tTELLO_CMD_ACTIVATION_TIME: 71,\n\t\t\tTELLO_CMD_LOADER_VERSION: 73,\n\t\t\tTELLO_CMD_STATUS: 86,\n\t\t\tTELLO_CMD_ALT_LIMIT: 4182,\n\t\t\tTELLO_CMD_LOW_BATT_THRESHOLD: 4183,\n\t\t\tTELLO_CMD_ATT_ANGLE: 4185,\n\t\t\tTELLO_CMD_SET_JPEG_QUALITY: 55,\n\t\t\tTELLO_CMD_TAKEOFF: 84,\n\t\t\tTELLO_CMD_LANDING: 85,\n\t\t\tTELLO_CMD_SET_ALT_LIMIT: 88,\n\t\t\tTELLO_CMD_FLIP: 92,\n\t\t\tTELLO_CMD_THROW_FLY: 93,\n\t\t\tTELLO_CMD_PALM_LANDING: 94,\n\t\t\tTELLO_CMD_PLANE_CALIBRATION: 4180,\n\t\t\tTELLO_CMD_SET_LOW_BATTERY_THRESHOLD: 4181,\n\t\t\tTELLO_CMD_SET_ATTITUDE_ANGLE: 4184,\n\t\t\tTELLO_CMD_ERROR1: 67,\n\t\t\tTELLO_CMD_ERROR2: 68,\n\t\t\tTELLO_CMD_FILE_SIZE: 98,\n\t\t\tTELLO_CMD_FILE_DATA: 99,\n\t\t\tTELLO_CMD_FILE_COMPLETE: 100,\n\t\t\tTELLO_CMD_HANDLE_IMU_ANGLE: 90,\n\t\t\tTELLO_CMD_SET_VIDEO_BIT_RATE: 32,\n\t\t\tTELLO_CMD_SET_DYN_ADJ_RATE: 33,\n\t\t\tTELLO_CMD_SET_EIS: 36,\n\t\t\tTELLO_CMD_SMART_VIDEO_START: 128,\n\t\t\tTELLO_CMD_SMART_VIDEO_STATUS: 129,\n\t\t\tTELLO_CMD_BOUNCE: 4179\n\t\t},",
-        "x": 980,
-        "y": 1160,
-        "wires": []
-    },
-    {
-        "id": "dfe5c8b8.bc50c",
+        "id": "847ff50b.b6784",
         "type": "ui_gauge",
         "z": "eb99d644.4c9a1",
         "name": "",
@@ -334,211 +134,474 @@
         "width": 0,
         "height": 0,
         "gtype": "gage",
-        "title": "FlyTime",
-        "label": "FlyTime",
+        "title": "Temp",
+        "label": "Fº",
         "format": "{{value}}",
         "min": 0,
-        "max": "30",
+        "max": "100",
         "colors": [
             "#00b500",
             "#e6e600",
             "#ca3838"
         ],
-        "x": 1460,
-        "y": 1060,
+        "seg1": "",
+        "seg2": "",
+        "x": 1270,
+        "y": 580,
         "wires": []
     },
     {
-        "id": "fd0bda2c.6fe3e8",
-        "type": "function",
+        "id": "685eaabb.39e694",
+        "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "LOG_HEADER",
-        "func": "/*\n else if (cmdID == this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE) {\t// log header, we need request log\n\t\t\t\t\tvar payload = Buffer.alloc(3);\n\t\t\t\t\t\tpayload[1]=bb[9];\n\t\t\t\t\t\tpayload[2]=bb[10];\n\t\t\t\t\tthis._sendCmd(0x50, this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE, payload, 3);\n\t\t\t\t\t\n*/\nvar TELLO_CMD_LOG_HEADER_WRITE = 4176\nvar TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t]\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t]\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x3692\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++\n\t\t\tsize--\n\t\t};\n\t\treturn seed\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x77\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++\n\t\t\tsize--\n\t\t}\n\t\treturn seed\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data, data_len) {\n\t\tvar size = 11 + (data_len?data_len:(data?data.length:0));\n\t\tvar bb = Buffer.alloc(size)\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt16LE(size << 3,1)\n\t\tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(pacType,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data && !data_len) {\n\t\t\tbb.write(data,9)\n\t\t} else if (data) {\n\t\t\tfor (var i=0; i<data_len; i++) {\n\t\t\t\tbb[9 + i] = data[i];\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2)\n\t\treturn bb\n\t}\n\t\nvar payload = Buffer.alloc(3);\npayload[1]=msg.payload[9];\npayload[2]=msg.payload[10];\nout = buildPacket(0x50, TELLO_CMD_LOG_HEADER_WRITE, msg.seqID, payload, 3);\nmsg.payload = out;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 1000,
-        "y": 940,
+        "name": "battery percentage",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.bat",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 500,
         "wires": [
             [
-                "c18b9697.18954",
-                "c480d444.574f18"
+                "1deb8d29.6a2d93"
             ]
         ]
     },
     {
-        "id": "c18b9697.18954",
+        "id": "a65ade14.6997a8",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "fly time",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.time",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 540,
+        "wires": [
+            [
+                "b9cf60bc.1e05f"
+            ]
+        ]
+    },
+    {
+        "id": "a7c383c4.69929",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.temph",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 580,
+        "wires": [
+            [
+                "847ff50b.b6784"
+            ]
+        ]
+    },
+    {
+        "id": "8374ab1.3ca6258",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Status field descriptions",
+        "info": "pitch = the degree of the attitude pitch.\nroll = the degree of the attitude roll.\nyaw = the degree of the attitude yaw.\nvgx = the speed of “x” axis. \nvgy = the speed of the “y” axis.\nvgz = the speed of the “z” axis.\ntempl = the lowest temperature in degree Celsius.\ntemph = the highest temperature in degree Celsius\ntof = the time of flight distance in cm.\nh = the height in cm. \nbat = the percentage of the current battery level.\nbaro = the barometer measurement in cm.\ntime = the amount of time the motor has been used.\nagx = the acceleration of the “x” axis.\nagy = the acceleration of the “y” axis.\nagz = the acceleration of the “z” axis.",
+        "x": 1100,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "8047d1d.532ef3",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "3c254ec1.e2bac2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Accel X",
+        "label": "cm/sec2",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "32070efc.25fc72",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "3c254ec1.e2bac2",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Accel Y",
+        "label": "cm/sec2",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "b8aad859.d39e88",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "3c254ec1.e2bac2",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Accel Z",
+        "label": "cm/sec2",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "b49cdbe.dfd3ca8",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "aa89a9f5.d93408",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Speed Y",
+        "label": "cm/sec",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "24211edc.7758b2",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "aa89a9f5.d93408",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Speed Z",
+        "label": "cm/sec",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "fadbcefe.bd00e8",
+        "type": "ui_gauge",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "aa89a9f5.d93408",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Speed X",
+        "label": "cm/sec",
+        "format": "{{value}}",
+        "min": "-100",
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1280,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "eb45e55f.07453",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Ground Speed X",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.vgx",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 820,
+        "wires": [
+            [
+                "fadbcefe.bd00e8"
+            ]
+        ]
+    },
+    {
+        "id": "324fccca.555944",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Ground Speed y",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.vgy",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 860,
+        "wires": [
+            [
+                "b49cdbe.dfd3ca8"
+            ]
+        ]
+    },
+    {
+        "id": "f603831c.7e1ca",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Ground Speed z",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.vgz",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1080,
+        "y": 900,
+        "wires": [
+            [
+                "24211edc.7758b2"
+            ]
+        ]
+    },
+    {
+        "id": "39a4c4ad.5a9d4c",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Height",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.h",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1050,
+        "y": 620,
+        "wires": [
+            [
+                "c8823cd4.86a0b"
+            ]
+        ]
+    },
+    {
+        "id": "14c79b00.6bd925",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Accel X",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.agx",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 700,
+        "wires": [
+            [
+                "8047d1d.532ef3"
+            ]
+        ]
+    },
+    {
+        "id": "32249d46.fe41ea",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Accel Y",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.agy",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 740,
+        "wires": [
+            [
+                "32070efc.25fc72"
+            ]
+        ]
+    },
+    {
+        "id": "9d32f3f8.c42d28",
+        "type": "change",
+        "z": "eb99d644.4c9a1",
+        "name": "Accel Z",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.agz",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 780,
+        "wires": [
+            [
+                "b8aad859.d39e88"
+            ]
+        ]
+    },
+    {
+        "id": "c457be1f.939b7",
         "type": "debug",
         "z": "eb99d644.4c9a1",
         "name": "",
         "active": false,
-        "console": "false",
-        "complete": "true",
-        "x": 1230,
-        "y": 880,
-        "wires": []
-    },
-    {
-        "id": "b0dc3411.c617a",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "3c254ec1.e2bac2",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "IMU.ACC_X",
-        "label": "IMU.ACC_X",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "x": 1470,
-        "y": 1180,
-        "wires": []
-    },
-    {
-        "id": "8aa3141c.44d48",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "3c254ec1.e2bac2",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "IMU.ACC_Y",
-        "label": "IMU.ACC_Y",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "x": 1470,
-        "y": 1220,
-        "wires": []
-    },
-    {
-        "id": "3715c0ec.49c018",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "3c254ec1.e2bac2",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "IMU.ACC_Z",
-        "label": "IMU.ACC_Z",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "x": 1470,
-        "y": 1260,
-        "wires": []
-    },
-    {
-        "id": "46edef33.f90de",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "aa89a9f5.d93408",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "MVO_PY",
-        "label": "MVO_PY",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "x": 1460,
-        "y": 1340,
-        "wires": []
-    },
-    {
-        "id": "8ec58de2.b2acb8",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "aa89a9f5.d93408",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "MVO_PZ",
-        "label": "MVO_PZ",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "x": 1460,
-        "y": 1380,
-        "wires": []
-    },
-    {
-        "id": "55c3fa0b.62490c",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Display",
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "x": 970,
-        "y": 180,
-        "wires": [
-            [
-                "94aa69ce.28bc08"
-            ]
-        ]
-    },
-    {
-        "id": "3c0340bc.6a1c18",
-        "type": "debug",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
-        "x": 1350,
-        "y": 180,
+        "complete": "false",
+        "x": 590,
+        "y": 860,
         "wires": []
     },
     {
-        "id": "af493bfc.bbf738",
+        "id": "84b521a8.0c421",
         "type": "ui_gauge",
         "z": "eb99d644.4c9a1",
         "name": "",
@@ -547,35 +610,11 @@
         "width": 0,
         "height": 0,
         "gtype": "gage",
-        "title": "State",
-        "label": "State",
+        "title": "Barometer",
+        "label": "millibars",
         "format": "{{value}}",
         "min": 0,
-        "max": "30",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "x": 1450,
-        "y": 1100,
-        "wires": []
-    },
-    {
-        "id": "26d5b8d5.a9daf",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "aa89a9f5.d93408",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "MVO_PX",
-        "label": "MVO_PX",
-        "format": "{{value}}",
-        "min": "-1",
-        "max": "1",
+        "max": "1000",
         "colors": [
             "#00b500",
             "#e6e600",
@@ -583,67 +622,77 @@
         ],
         "seg1": "",
         "seg2": "",
-        "x": 1460,
-        "y": 1300,
+        "x": 1290,
+        "y": 660,
         "wires": []
     },
     {
-        "id": "c992607.49ef32",
-        "type": "function",
+        "id": "49cae7e9.43ec9",
+        "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "TELLO_CMD_ALT_LIMIT",
-        "func": "/*\n else if (cmdID == this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE) {\t// log header, we need request log\n\t\t\t\t\tvar payload = Buffer.alloc(3);\n\t\t\t\t\t\tpayload[1]=bb[9];\n\t\t\t\t\t\tpayload[2]=bb[10];\n\t\t\t\t\tthis._sendCmd(0x50, this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE, payload, 3);\n\t\t\t\t\t\n*/\nvar TELLO_CMD_ALT_LIMIT = 4182\nvar TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t]\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t]\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x3692\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++\n\t\t\tsize--\n\t\t}\n\t\treturn seed\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x77\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++\n\t\t\tsize--\n\t\t}\n\t\treturn seed\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data, data_len) {\n\t\tvar size = 11 + (data_len?data_len:(data?data.length:0));\n\t\tvar bb = Buffer.alloc(size)\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt16LE(size << 3,1)\n\t\tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(pacType,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data && !data_len) {\n\t\t\tbb.write(data,9)\n\t\t} else if (data) {\n\t\t\tfor (var i=0; i<data_len; i++) {\n\t\t\t\tbb[9 + i] = data[i];\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2);\n\t\treturn bb;\n\t}\n\t\nvar payload = Buffer.alloc(3);\npayload[1]=msg.payload[9];\npayload[2]=msg.payload[10];\ntstatus = global.get(\"tellomsg\");\nout = buildPacket(0x50, TELLO_CMD_ALT_LIMIT, tstatus.seqID, false);\nmsg.payload = out;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 470,
-        "y": 800,
+        "name": "Barometer",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.baro",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 660,
         "wires": [
             [
-                "c480d444.574f18"
+                "84b521a8.0c421"
             ]
         ]
     },
     {
-        "id": "54c7e8b1.0b3538",
-        "type": "inject",
+        "id": "844dd20.c9edfb",
+        "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "DirrectComandALT",
-        "topic": "",
-        "payload": "cw30",
-        "payloadType": "str",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 210,
-        "y": 800,
+        "name": "Parse Status into an object",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": " $filter($split($trim($string(payload)), ';'), function($v){$v != ''}){$substringBefore($, ':') : $number($substringAfter($, ':'))}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 900,
         "wires": [
             [
-                "c992607.49ef32"
+                "7efa03a8.cf113c",
+                "685eaabb.39e694",
+                "a65ade14.6997a8",
+                "a7c383c4.69929",
+                "39a4c4ad.5a9d4c",
+                "49cae7e9.43ec9",
+                "14c79b00.6bd925",
+                "32249d46.fe41ea",
+                "9d32f3f8.c42d28",
+                "eb45e55f.07453",
+                "324fccca.555944",
+                "f603831c.7e1ca"
             ]
         ]
     },
     {
-        "id": "4c9c3548.f9cb2c",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Display",
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "x": 970,
-        "y": 100,
-        "wires": [
-            [
-                "4c0664e.5aa599c"
-            ]
-        ]
-    },
-    {
-        "id": "d2f312df.04951",
+        "id": "7efa03a8.cf113c",
         "type": "debug",
         "z": "eb99d644.4c9a1",
         "name": "",
@@ -651,150 +700,9 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
-        "x": 1350,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "566e1af0.58737c",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "DirrectComandLOW_BATT",
-        "topic": "",
-        "payload": "4183",
-        "payloadType": "num",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 190,
-        "y": 840,
-        "wires": [
-            [
-                "b6531fb7.6821b8"
-            ]
-        ]
-    },
-    {
-        "id": "b6531fb7.6821b8",
-        "type": "function",
-        "z": "eb99d644.4c9a1",
-        "name": "CMD from Inject",
-        "func": "/*\n else if (cmdID == this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE) {\t// log header, we need request log\n\t\t\t\t\tvar payload = Buffer.alloc(3);\n\t\t\t\t\t\tpayload[1]=bb[9];\n\t\t\t\t\t\tpayload[2]=bb[10];\n\t\t\t\t\tthis._sendCmd(0x50, this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE, payload, 3);\n\t\t\t\t\t\n*/\nvar TELLO_CMD_ALT_LIMIT = 4182;\nvar TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t];\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t];\n\t\t\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x3692\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t}\n\t\treturn seed;\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x77\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t}\n\t\treturn seed;\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data, data_len) {\n\t\tvar size = 11 + (data_len?data_len:(data?data.length:0));\n\t\tvar bb = Buffer.alloc(size)\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt16LE(size << 3,1)\n\t\tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(pacType,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data && !data_len) {\n\t\t\tbb.write(data,9)\n\t\t} else if (data) {\n\t\t\tfor (var i=0; i<data_len; i++) {\n\t\t\t\tbb[9 + i] = data[i];\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2)\n\t\treturn bb\n\t}\n\t\nvar payload = Buffer.alloc(3);\npayload[1]=msg.payload[9];\npayload[2]=msg.payload[10];\ntstatus = global.get(\"tellomsg\")\nout = buildPacket(0x48, msg.payload, tstatus.seqID, false);\nmsg.payload = out;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 440,
-        "y": 900,
-        "wires": [
-            [
-                "c480d444.574f18"
-            ]
-        ]
-    },
-    {
-        "id": "f553a2e1.c6b2e8",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "ALTLimit",
-        "topic": "",
-        "payload": "4182",
-        "payloadType": "num",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "x": 240,
-        "y": 880,
-        "wires": [
-            [
-                "b6531fb7.6821b8"
-            ]
-        ]
-    },
-    {
-        "id": "a0da73b3.a1e928",
-        "type": "comment",
-        "z": "eb99d644.4c9a1",
-        "name": "<<<< click this once u connected",
-        "info": "",
-        "x": 500,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "d0516e3d.b5187",
-        "type": "debug",
-        "z": "eb99d644.4c9a1",
-        "name": "log",
-        "active": true,
-        "console": "false",
-        "complete": "true",
-        "x": 1230,
-        "y": 1140,
-        "wires": []
-    },
-    {
-        "id": "50657794.f0e3d8",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Date Time",
-        "topic": "",
-        "payload": "70",
-        "payloadType": "num",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 240,
-        "y": 920,
-        "wires": [
-            [
-                "b6531fb7.6821b8"
-            ]
-        ]
-    },
-    {
-        "id": "62c4d4ca.21159c",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Version",
-        "topic": "",
-        "payload": "69",
-        "payloadType": "num",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 250,
-        "y": 960,
-        "wires": [
-            [
-                "b6531fb7.6821b8"
-            ]
-        ]
-    },
-    {
-        "id": "83e88b41.3c21b8",
-        "type": "ui_gauge",
-        "z": "eb99d644.4c9a1",
-        "name": "",
-        "group": "aa89a9f5.d93408",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Height",
-        "label": "Height",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "30",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "x": 1450,
-        "y": 1420,
+        "complete": "false",
+        "x": 1070,
+        "y": 460,
         "wires": []
     },
     {
@@ -814,12 +722,11 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 90,
-        "y": 220,
+        "x": 260,
+        "y": 260,
         "wires": [
             [
-                "66a7e407.22f92c",
-                "dbf890f2.96b5f8"
+                "30936548.fb16e2"
             ]
         ]
     },
@@ -840,11 +747,11 @@
         "payload": "land",
         "payloadType": "str",
         "topic": "",
-        "x": 90,
-        "y": 140,
+        "x": 250,
+        "y": 220,
         "wires": [
             [
-                "6131521f.4dc414"
+                "895b277a.567628"
             ]
         ]
     },
@@ -864,444 +771,36 @@
         "payload": "",
         "payloadType": "str",
         "topic": "",
-        "x": 100,
-        "y": 100,
-        "wires": [
-            [
-                "8d94cd33.7c8d5"
-            ]
-        ]
-    },
-    {
-        "id": "a8f253f9.363d48",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "Status",
-        "topic": "",
-        "payload": "86",
-        "payloadType": "num",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 250,
-        "y": 1000,
-        "wires": [
-            [
-                "ee5409c0.949d78"
-            ]
-        ]
-    },
-    {
-        "id": "ee5409c0.949d78",
-        "type": "function",
-        "z": "eb99d644.4c9a1",
-        "name": "CMD from Inject",
-        "func": "/*\n else if (cmdID == this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE) {\t// log header, we need request log\n\t\t\t\t\tvar payload = Buffer.alloc(3);\n\t\t\t\t\t\tpayload[1]=bb[9];\n\t\t\t\t\t\tpayload[2]=bb[10];\n\t\t\t\t\tthis._sendCmd(0x50, this.tello.commands.TELLO_CMD_LOG_HEADER_WRITE, payload, 3);\n\t\t\t\t\t\n*/\nvar TELLO_CMD_ALT_LIMIT = 4182\nvar TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t]\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t]\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x3692\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++\n\t\t\tsize--\n\t\t}\n\t\treturn seed\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0\n\t\tvar seed = 0x77\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++\n\t\t\tsize--\n\t\t}\n\t\treturn seed\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data, data_len) {\n\t\tvar size = 11 + (data_len?data_len:(data?data.length:0));\n\t\tvar bb = Buffer.alloc(size)\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt16LE(size << 3,1)\n\t\tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(pacType,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data && !data_len) {\n\t\t\tbb.write(data,9)\n\t\t} else if (data) {\n\t\t\tfor (var i=0; i<data_len; i++) {\n\t\t\t\tbb[9 + i] = data[i];\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2)\n\t\treturn bb\n\t}\n\t\nvar payload = Buffer.alloc(3);\npayload[1]=msg.payload[9];\npayload[2]=msg.payload[10];\ntstatus = global.get(\"tellomsg\")\nout = buildPacket(0x60, msg.payload, 0, false);\nmsg.payload = out;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 440,
-        "y": 1000,
-        "wires": [
-            [
-                "c480d444.574f18"
-            ]
-        ]
-    },
-    {
-        "id": "9b9edc5a.8b851",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "battery percentage",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.state.battery.percentage",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1270,
-        "y": 980,
-        "wires": [
-            [
-                "4ee4c22a.8519dc"
-            ]
-        ]
-    },
-    {
-        "id": "a145a1f9.e046c8",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "ground speed",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.state.ground.speed",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1260,
-        "y": 1020,
-        "wires": [
-            [
-                "613b6166.d120d8"
-            ]
-        ]
-    },
-    {
-        "id": "f3caa88.08e3558",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "fly time",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.state.fly_time.time",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1240,
-        "y": 1060,
-        "wires": [
-            [
-                "dfe5c8b8.bc50c"
-            ]
-        ]
-    },
-    {
-        "id": "445797ed.fcfd5",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "em state",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.state.em.state",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1240,
-        "y": 1100,
-        "wires": [
-            [
-                "af493bfc.bbf738"
-            ]
-        ]
-    },
-    {
-        "id": "d2ff3044.24d8f8",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "MVO_PX",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.MVO_PX",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1240,
-        "y": 1300,
-        "wires": [
-            [
-                "26d5b8d5.a9daf"
-            ]
-        ]
-    },
-    {
-        "id": "49b3fcbb.fc3184",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "MVO_PY",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.MVO_PY",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1240,
-        "y": 1340,
-        "wires": [
-            [
-                "46edef33.f90de"
-            ]
-        ]
-    },
-    {
-        "id": "96df48ba.d5e47",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "MVO_PZ",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.MVO_PZ",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1240,
-        "y": 1380,
-        "wires": [
-            [
-                "8ec58de2.b2acb8"
-            ]
-        ]
-    },
-    {
-        "id": "c229961c.df5b48",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "MVO_HEIGHT",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.MVO_HEIGHT",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1260,
-        "y": 1420,
-        "wires": [
-            [
-                "83e88b41.3c21b8",
-                "1d12cec3.43c889"
-            ]
-        ]
-    },
-    {
-        "id": "14b161dd.ad33fe",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "IMU_ACC_X",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.IMU_ACC_X",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1250,
-        "y": 1180,
-        "wires": [
-            [
-                "b0dc3411.c617a"
-            ]
-        ]
-    },
-    {
-        "id": "76fd8db8.86e1b4",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "IMU_ACC_Y",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.IMU_ACC_Y",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1250,
-        "y": 1220,
-        "wires": [
-            [
-                "8aa3141c.44d48"
-            ]
-        ]
-    },
-    {
-        "id": "ff9619bd.7faef",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "IMU_ACC_Z",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "status.IMU_ACC_Z",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1250,
-        "y": 1260,
-        "wires": [
-            [
-                "3715c0ec.49c018"
-            ]
-        ]
-    },
-    {
-        "id": "4c0664e.5aa599c",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "tellomsg",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "tellomsg",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1140,
-        "y": 100,
-        "wires": [
-            [
-                "d2f312df.04951"
-            ]
-        ]
-    },
-    {
-        "id": "8f3dfd08.44fc08",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "tellostatus",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "tellostatus",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1150,
-        "y": 140,
-        "wires": [
-            [
-                "98c4e188.6d53c"
-            ]
-        ]
-    },
-    {
-        "id": "94aa69ce.28bc08",
-        "type": "change",
-        "z": "eb99d644.4c9a1",
-        "name": "tellolog",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "tellolog",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1140,
+        "x": 260,
         "y": 180,
         "wires": [
             [
-                "3c0340bc.6a1c18"
+                "b43802cf.6337a8"
             ]
         ]
     },
     {
-        "id": "1d12cec3.43c889",
-        "type": "debug",
+        "id": "ad7089a.7222af8",
+        "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "Height",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "x": 1450,
-        "y": 1460,
-        "wires": []
+        "name": "Init",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 90,
+        "y": 200,
+        "wires": [
+            [
+                "b43802cf.6337a8"
+            ]
+        ]
     },
     {
-        "id": "dbf890f2.96b5f8",
+        "id": "b43802cf.6337a8",
         "type": "change",
         "z": "eb99d644.4c9a1",
         "name": "Init",
@@ -1320,7 +819,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "0",
                 "tot": "str"
@@ -1331,33 +830,57 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 260,
+        "x": 470,
+        "y": 200,
         "wires": [
             [
-                "55177192.9229c",
-                "e5857b58.e5c6a"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "55177192.9229c",
-        "type": "function",
+        "id": "30936548.fb16e2",
+        "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "Send Individual Tello Commands",
-        "func": "var telloaction ;\n\nif( msg.payload.distance != \"0\") {\n   telloaction = new Buffer( msg.payload.tellocmd + ' '+ msg.payload.distance );\n} else {\n   telloaction = new Buffer( msg.payload.tellocmd );\n}\n\nmsg.payload = telloaction;\t\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 750,
-        "y": 480,
+        "name": "Init",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "command",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 280,
         "wires": [
             [
-                "c480d444.574f18"
+                "9ea0507d.300938",
+                "a386c277.c7419",
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "f7d45e1.7a169a",
+        "id": "1748c9d0.862b1e",
         "type": "change",
         "z": "eb99d644.4c9a1",
         "name": "TakeOff",
@@ -1376,7 +899,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "0",
                 "tot": "str"
@@ -1387,20 +910,20 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 300,
+        "x": 480,
+        "y": 320,
         "wires": [
             [
-                "55177192.9229c",
-                "e5857b58.e5c6a"
+                "9ea0507d.300938",
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "f2063def.e88778",
+        "id": "12852e9d.acc8e9",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "Up 60",
+        "name": "Up 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1416,9 +939,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "60",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1427,19 +950,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 340,
+        "x": 480,
+        "y": 360,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "d1aca775.3de15",
+        "id": "f4a3570b.123ea8",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "right 30",
+        "name": "Right 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1455,9 +978,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "30",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1466,19 +989,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 420,
+        "x": 490,
+        "y": 440,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "e784f19a.88cb38",
+        "id": "702843de.46b6f4",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "forward 60",
+        "name": "Forward 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1494,9 +1017,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "60",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1505,19 +1028,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 500,
+        "x": 500,
+        "y": 520,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "5692e3de.99393c",
+        "id": "f46db5af.90bc8",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "down 60",
+        "name": "Down 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1533,9 +1056,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "60",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1544,19 +1067,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 380,
+        "x": 490,
+        "y": 400,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "bf040a2b.1d785",
+        "id": "958a69e3.adeb68",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "left 30",
+        "name": "Left 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1572,9 +1095,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "30",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1583,19 +1106,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 460,
+        "x": 480,
+        "y": 480,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "f96f8ad9.566bf",
+        "id": "7672f53b.435814",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "back 60",
+        "name": "Back 50cm",
         "rules": [
             {
                 "t": "delete",
@@ -1611,9 +1134,9 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "60",
+                "to": "50",
                 "tot": "str"
             }
         ],
@@ -1622,19 +1145,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 540,
+        "x": 490,
+        "y": 560,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "33087f28.341788",
+        "id": "f44672c6.efbc58",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "cw 90",
+        "name": "cw 90º",
         "rules": [
             {
                 "t": "delete",
@@ -1650,7 +1173,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "90",
                 "tot": "str"
@@ -1661,19 +1184,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 580,
+        "x": 470,
+        "y": 600,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "e7a55a9a.b0b1a",
+        "id": "1b18cf73.4a31e1",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "ccw 90",
+        "name": "ccw 90º",
         "rules": [
             {
                 "t": "delete",
@@ -1689,7 +1212,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "90",
                 "tot": "str"
@@ -1700,19 +1223,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 620,
+        "x": 480,
+        "y": 640,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "51c9b55f.4ef7dc",
+        "id": "d31cef75.0d8cf8",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "flip",
+        "name": "Flip f",
         "rules": [
             {
                 "t": "delete",
@@ -1728,7 +1251,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "f",
                 "tot": "str"
@@ -1739,16 +1262,16 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 700,
+        "x": 470,
+        "y": 720,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "fb8dafc0.417b4",
+        "id": "80f57575.b5b3f",
         "type": "change",
         "z": "eb99d644.4c9a1",
         "name": "battery?",
@@ -1762,15 +1285,22 @@
                 "t": "set",
                 "p": "payload.tellocmd",
                 "pt": "msg",
-                "to": "battery",
+                "to": "battery?",
                 "tot": "str"
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
-                "to": "?",
+                "to": "0",
                 "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "tellorequestbattery",
+                "pt": "global",
+                "to": "true",
+                "tot": "bool"
             }
         ],
         "action": "",
@@ -1778,38 +1308,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 740,
+        "x": 480,
+        "y": 800,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "f6cd5fd1.9b5e3",
+        "id": "f8e8826d.de767",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "land",
-        "topic": "",
-        "payload": "land",
-        "payloadType": "str",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "x": 90,
-        "y": 180,
-        "wires": [
-            [
-                "6131521f.4dc414"
-            ]
-        ]
-    },
-    {
-        "id": "1af9b1eb.8eea8e",
-        "type": "inject",
-        "z": "eb99d644.4c9a1",
-        "name": "takeoff",
+        "name": "Land",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1818,19 +1329,18 @@
         "once": false,
         "onceDelay": "",
         "x": 90,
-        "y": 260,
+        "y": 240,
         "wires": [
             [
-                "dbf890f2.96b5f8",
-                "66a7e407.22f92c"
+                "895b277a.567628"
             ]
         ]
     },
     {
-        "id": "fe554cfe.fa56d",
+        "id": "b134e896.357268",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "up60",
+        "name": "TakeOff",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1838,19 +1348,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 340,
+        "x": 90,
+        "y": 280,
         "wires": [
             [
-                "f2063def.e88778"
+                "30936548.fb16e2"
             ]
         ]
     },
     {
-        "id": "e9c13026.8bd23",
+        "id": "e4005f8a.4515d",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "down60",
+        "name": "Up 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1858,19 +1368,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 380,
+        "x": 100,
+        "y": 360,
         "wires": [
             [
-                "5692e3de.99393c"
+                "12852e9d.acc8e9"
             ]
         ]
     },
     {
-        "id": "6bb9614c.b1def",
+        "id": "fc1fc45e.30577",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "right30",
+        "name": "Down 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1878,19 +1388,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 420,
+        "x": 110,
+        "y": 400,
         "wires": [
             [
-                "d1aca775.3de15"
+                "f46db5af.90bc8"
             ]
         ]
     },
     {
-        "id": "94925354.9eb858",
+        "id": "4cd2f028.d4dfc8",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "left30",
+        "name": "Right 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1898,19 +1408,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 460,
+        "x": 110,
+        "y": 440,
         "wires": [
             [
-                "bf040a2b.1d785"
+                "f4a3570b.123ea8"
             ]
         ]
     },
     {
-        "id": "7e0edb1e.e74a14",
+        "id": "7fef9ad6.808d84",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "forward60",
+        "name": "Left 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1918,19 +1428,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 240,
-        "y": 500,
+        "x": 100,
+        "y": 480,
         "wires": [
             [
-                "e784f19a.88cb38"
+                "958a69e3.adeb68"
             ]
         ]
     },
     {
-        "id": "3fd013ca.d10964",
+        "id": "1e30d1a5.9ffe06",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "back60",
+        "name": "Forward 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1938,19 +1448,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 540,
+        "x": 110,
+        "y": 520,
         "wires": [
             [
-                "f96f8ad9.566bf"
+                "702843de.46b6f4"
             ]
         ]
     },
     {
-        "id": "3224ab85.c8a63c",
+        "id": "f2c1f1ee.454a1",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "cw30",
+        "name": "Back 50cm",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1958,19 +1468,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 580,
+        "x": 100,
+        "y": 560,
         "wires": [
             [
-                "33087f28.341788"
+                "7672f53b.435814"
             ]
         ]
     },
     {
-        "id": "cbfd79af.6ba51",
+        "id": "824a185.0635868",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "Full360",
+        "name": "cw 90º",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1978,19 +1488,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 660,
+        "x": 90,
+        "y": 600,
         "wires": [
             [
-                "c337cf8e.ed4fa"
+                "f44672c6.efbc58"
             ]
         ]
     },
     {
-        "id": "5c996898.8c221",
+        "id": "e0fbd59.ea9e4a8",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "flipforward",
+        "name": "Full 360º",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -1998,16 +1508,36 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 240,
-        "y": 700,
+        "x": 100,
+        "y": 680,
         "wires": [
             [
-                "51c9b55f.4ef7dc"
+                "63a0d49a.ac6234"
             ]
         ]
     },
     {
-        "id": "7725aba6.f75e7c",
+        "id": "49e899ff.64a768",
+        "type": "inject",
+        "z": "eb99d644.4c9a1",
+        "name": "Flip forward",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 110,
+        "y": 720,
+        "wires": [
+            [
+                "d31cef75.0d8cf8"
+            ]
+        ]
+    },
+    {
+        "id": "f2b84216.6c3b18",
         "type": "inject",
         "z": "eb99d644.4c9a1",
         "name": "Battery?",
@@ -2018,19 +1548,19 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 240,
-        "y": 740,
+        "x": 220,
+        "y": 800,
         "wires": [
             [
-                "fb8dafc0.417b4"
+                "80f57575.b5b3f"
             ]
         ]
     },
     {
-        "id": "c7540a48.c2acc",
+        "id": "ad18f4be.785dc",
         "type": "inject",
         "z": "eb99d644.4c9a1",
-        "name": "ccw30",
+        "name": "ccw 90º",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
@@ -2038,22 +1568,22 @@
         "crontab": "",
         "once": false,
         "onceDelay": "",
-        "x": 250,
-        "y": 620,
+        "x": 90,
+        "y": 640,
         "wires": [
             [
-                "e7a55a9a.b0b1a"
+                "1b18cf73.4a31e1"
             ]
         ]
     },
     {
-        "id": "66a7e407.22f92c",
+        "id": "a386c277.c7419",
         "type": "delay",
         "z": "eb99d644.4c9a1",
         "name": "",
         "pauseType": "delay",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
         "rate": "1",
         "nbRateUnits": "1",
         "rateUnits": "second",
@@ -2061,19 +1591,19 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
-        "x": 260,
-        "y": 300,
+        "x": 110,
+        "y": 320,
         "wires": [
             [
-                "f7d45e1.7a169a"
+                "1748c9d0.862b1e"
             ]
         ]
     },
     {
-        "id": "c337cf8e.ed4fa",
+        "id": "63a0d49a.ac6234",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "cw 360",
+        "name": "cw 360º",
         "rules": [
             {
                 "t": "delete",
@@ -2089,7 +1619,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "360",
                 "tot": "str"
@@ -2100,19 +1630,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 660,
+        "x": 480,
+        "y": 680,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "6131521f.4dc414",
+        "id": "895b277a.567628",
         "type": "change",
         "z": "eb99d644.4c9a1",
-        "name": "land",
+        "name": "Land",
         "rules": [
             {
                 "t": "delete",
@@ -2128,7 +1658,7 @@
             },
             {
                 "t": "set",
-                "p": "payload.distance",
+                "p": "payload.tellovalue",
                 "pt": "msg",
                 "to": "0",
                 "tot": "str"
@@ -2139,27 +1669,529 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 410,
-        "y": 180,
+        "x": 470,
+        "y": 240,
         "wires": [
             [
-                "55177192.9229c"
+                "c9e80d2.6196df"
             ]
         ]
     },
     {
-        "id": "e5857b58.e5c6a",
+        "id": "d588d1b8.20f53",
+        "type": "udp out",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "52955",
+        "base64": false,
+        "multicast": "false",
+        "x": 630,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ef51687.b0dcd98",
         "type": "debug",
         "z": "eb99d644.4c9a1",
         "name": "",
         "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 590,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "9ea0507d.300938",
+        "type": "debug",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
-        "x": 850,
-        "y": 260,
+        "x": 730,
+        "y": 280,
         "wires": []
+    },
+    {
+        "id": "4f790bdc.fe33ec",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "1 - Connect to TELLO-NNNNNN WiFi",
+        "info": "",
+        "x": 240,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "f2887e3c.3c059",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Status \"set\" commands",
+        "info": "Send set command to Tello and wait for its response.\nPossible set commands:\n- speed?: get current speed (cm/s): x: 1-100\n- battery?: get current battery percentage: x: 0-100\n- time?: get current fly time (s): time\n- height?: get height (cm): x: 0-3000\n- temp?: get temperature (°C): x: 0-90\n- attitude?: get IMU attitude data: pitch roll yaw\n- baro?: get barometer value (m): x\n- tof?: get distance value from TOF (cm): x: 30-1000\n- wifi?: get Wi-Fi SNR: snr",
+        "x": 260,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "c9e80d2.6196df",
+        "type": "link out",
+        "z": "eb99d644.4c9a1",
+        "name": "TelloControls-Out",
+        "links": [
+            "89436494.ecffd"
+        ],
+        "x": 695,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "616102.8782ef",
+        "type": "function",
+        "z": "eb99d644.4c9a1",
+        "name": "Send Individual Tello Command",
+        "func": "var telloaction ;\n\nif((msg.payload.tellovalue) && (msg.payload.tellovalue != \"0\")) {\n  telloaction = new Buffer( msg.payload.tellocmd + ' '+ msg.payload.tellovalue );\n} else {\n  telloaction = new Buffer( msg.payload.tellocmd );\n}\n\nmsg.payload = telloaction;\t\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 120,
+        "wires": [
+            [
+                "ef51687.b0dcd98",
+                "d588d1b8.20f53"
+            ]
+        ]
+    },
+    {
+        "id": "89436494.ecffd",
+        "type": "link in",
+        "z": "eb99d644.4c9a1",
+        "name": "TelloControls-In",
+        "links": [
+            "c9e80d2.6196df"
+        ],
+        "x": 135,
+        "y": 120,
+        "wires": [
+            [
+                "616102.8782ef"
+            ]
+        ]
+    },
+    {
+        "id": "6078890.ce99f78",
+        "type": "udp in",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "iface": "",
+        "port": "52955",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "buffer",
+        "x": 860,
+        "y": 120,
+        "wires": [
+            [
+                "476f2188.ab9728",
+                "88f49f63.7c5108"
+            ]
+        ]
+    },
+    {
+        "id": "476f2188.ab9728",
+        "type": "debug",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "complete": "true",
+        "x": 1010,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "88f49f63.7c5108",
+        "type": "function",
+        "z": "eb99d644.4c9a1",
+        "name": "parse incoming messages",
+        "func": "var TELLO_CMD_ALT_LIMIT = 4182;\nvar TELLO_CMD_LIGHT_STRENGTH = 53;\nvar TELLO_CMD_LOW_BATT_THRESHOLD = 4183;\nvar TELLO_CMD_STATUS = 86;\nvar TELLO_CMD_LOG_HEADER_WRITE = 4176;\nvar TELLO_CMD_LOG_DATA_WRITE = 4177;\nvar TELLO_CMD_LOG_CONFIGURATION = 4178;\nvar seqID ;\nvar pacType;\n\nfunction parsePacket (bb) {\n    //\tvar data = Buffer.from(msg);\n\tvar size = bb.length;\n\tvar payload = bb.slice(9,size);\n\tvar dataSize = 0;\n\tvar cmdID    = 0;\n\n\tif (bb.length >= 11) {\n\t\t\tvar mark = bb.readUInt8(0);\n\t\t\tif (mark == 0xCC) {\t// start of packet\n                size      = bb.readUInt16LE(1) >> 3;\n                var crc8  = bb.readUInt8(3);\n                pacType   = bb.readUInt8(4);\n                cmdID     = bb.readUInt16LE(5);\n                seqID     = bb.readUInt16LE(7);\n                dataSize  = size - 11;\n                var data  = false;\n                var crc16 = bb.readUInt16LE(size - 2);\n\t\t\t} \n\n\t\t\tif (cmdID == TELLO_CMD_STATUS) {\n                //\tthis.parseStatus(bb);\n            } else if (cmdID == TELLO_CMD_LOG_HEADER_WRITE) {\n                node.warn(\"TELLO_CMD_LOG_HEADER_WRITE \" + TELLO_CMD_LOG_HEADER_WRITE);\n\t\t\t} else if (cmdID == TELLO_CMD_LOG_DATA_WRITE) {\n                // \n\t\t\t} else if (cmdID == TELLO_CMD_ALT_LIMIT) {    \n                node.warn(\"TELLO_CMD_ALT_LIMIT \"+TELLO_CMD_ALT_LIMIT);\n                if (payload.length > 0) \n                    node.warn(payload.readUInt16LE(1));\n\t\t\t} else if (cmdID == TELLO_CMD_LIGHT_STRENGTH) {    \n                node.warn(\"TELLO_CMD_LIGHT_STRENGTH \"+TELLO_CMD_LIGHT_STRENGTH);\n                // if (payload.length > 0) \n                node.warn(payload.readUInt16LE(1));\n                // node.warn(payload)\n\t\t\t} else if (cmdID == TELLO_CMD_LOW_BATT_THRESHOLD) {    \n                node.warn(\"TELLO_CMD_LOW_BATT_THRESHOLD \"+TELLO_CMD_LOW_BATT_THRESHOLD);\n                if (payload.length > 0)\n                    node.warn(payload.readUInt16LE(1));\n\t\t\t} else if (cmdID == 69 ) {    //VERSION\n                node.warn(\"TELLO_CMD_VERSION \"+cmdID);\n                node.warn(payload);\n                node.warn(payload.slice(1,20).toString());\n\t\t\t} else if (cmdID == TELLO_CMD_LOG_CONFIGURATION) {    \n                node.warn(\"TELLO_CMD_LOG_CONFIGURATION command detected\");\n\t\t\t} else {\n                node.warn(\"DBG unknown CMD \"+ cmdID);\n\t\t\t}\n\t} else {\n        node.warn('wrong packet', bb);\n\t}\n\treturn cmdID;\n}\n\nif( msg.payload.toString() == \"ok\" ) {\n\tmsg.payload = \"ok\";\n\treturn msg;\n}\n\nvar batterystatus = global.get(\"tellorequestbattery\") || false;\nif ( batterystatus === true ) {\n    msg.payload = { \"battery\":msg.payload.toString().trim() };\n    global.set(\"tellorequestbattery\", false);    \n    return msg;\n}\n\nmsg.cmdID  = parsePacket(msg.payload);\nmsg.seqID  = seqID;\nmsg.pacType= pacType;\nglobal.set(\"tellomsg\",msg);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1080,
+        "y": 120,
+        "wires": [
+            [
+                "8b80f93d.dd4ef"
+            ]
+        ]
+    },
+    {
+        "id": "8b80f93d.dd4ef",
+        "type": "debug",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1310,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "54f6d418.519a04",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Receive Return Strings",
+        "info": "",
+        "x": 900,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2a4336c2.120a7a",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Send Commands",
+        "info": "",
+        "x": 200,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7d38107a.3bd4c",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Open port 8890/udp in Firewall",
+        "info": "Open Port 8890/udp in laptop firewall to receive Tello telemetry data.\n\nOn Linux\n$ sudo firewall-cmd --permanent --add-port=8890/udp\n\nTo get the video stream, open port 11111/udp\n$ sudo firewall-cmd --permanent --add-port=11111/udp\n\nOn Mac, use System Preferences to open the ports.\n - Open System Preferences > Security & Privacy > Firewall > Firewall Options\n - Click the + / Add button\n - Choose 'node' application from the Applications folder and click Add.\n - Ensure that the option next to the application is set to Allow incoming connections.\n - Click OK.",
+        "x": 270,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "b9cf60bc.1e05f",
+        "type": "ui_text",
+        "z": "eb99d644.4c9a1",
+        "group": "3c254ec1.e2bac2",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Flight Time:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 1290,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "c8823cd4.86a0b",
+        "type": "ui_chart",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "c11cc3e3.74adc8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Height",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1000",
+        "removeOlder": "15",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1270,
+        "y": 620,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d9f1bc67.22ed38",
+        "type": "comment",
+        "z": "eb99d644.4c9a1",
+        "name": "Node-RED Best Practices",
+        "info": "JSONata node performance is better than Function nodes",
+        "x": 630,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "a91c4b42.4ac89",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Up (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-up",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 270,
+        "y": 340,
+        "wires": [
+            [
+                "12852e9d.acc8e9"
+            ]
+        ]
+    },
+    {
+        "id": "895bb84b.b641a",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Down (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-down",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 270,
+        "y": 380,
+        "wires": [
+            [
+                "f46db5af.90bc8"
+            ]
+        ]
+    },
+    {
+        "id": "83a0ed7d.fe413",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Right (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-right",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 270,
+        "y": 420,
+        "wires": [
+            [
+                "f4a3570b.123ea8"
+            ]
+        ]
+    },
+    {
+        "id": "210ca24d.ce2b66",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Left (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-left",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 270,
+        "y": 460,
+        "wires": [
+            [
+                "958a69e3.adeb68"
+            ]
+        ]
+    },
+    {
+        "id": "dc8d4bbe.ccea28",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Forward (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-forward",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 280,
+        "y": 500,
+        "wires": [
+            [
+                "702843de.46b6f4"
+            ]
+        ]
+    },
+    {
+        "id": "e42c4c74.6d698",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Backward (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-backward",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 290,
+        "y": 540,
+        "wires": [
+            [
+                "7672f53b.435814"
+            ]
+        ]
+    },
+    {
+        "id": "b084d10d.df6b9",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clockwise (90º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 280,
+        "y": 580,
+        "wires": [
+            [
+                "f44672c6.efbc58"
+            ]
+        ]
+    },
+    {
+        "id": "c533baf4.31bc88",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "Counter Clockwise",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Counter Clockwise (45º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-undo",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 290,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ff87a506.ad4c3",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Full Rotation (360º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 290,
+        "y": 660,
+        "wires": [
+            [
+                "63a0d49a.ac6234"
+            ]
+        ]
+    },
+    {
+        "id": "a37c6b14.c3e678",
+        "type": "ui_button",
+        "z": "eb99d644.4c9a1",
+        "name": "",
+        "group": "cc4930b8.16c31",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Flip (forward)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 280,
+        "y": 700,
+        "wires": [
+            [
+                "d31cef75.0d8cf8"
+            ]
+        ]
     },
     {
         "id": "c11cc3e3.74adc8",
@@ -2168,7 +2200,7 @@
         "name": "Stats",
         "tab": "2d778ff4.c9c3c",
         "disp": true,
-        "width": "4",
+        "width": "6",
         "collapse": false
     },
     {
@@ -2179,18 +2211,18 @@
         "tab": "2d778ff4.c9c3c",
         "order": 2,
         "disp": true,
-        "width": "4",
+        "width": "6",
         "collapse": false
     },
     {
         "id": "aa89a9f5.d93408",
         "type": "ui_group",
         "z": "",
-        "name": "MVO Data",
+        "name": "Movement",
         "tab": "2d778ff4.c9c3c",
         "order": 3,
         "disp": true,
-        "width": "4",
+        "width": "6",
         "collapse": false
     },
     {
@@ -2201,14 +2233,14 @@
         "tab": "2d778ff4.c9c3c",
         "order": 4,
         "disp": true,
-        "width": "6",
+        "width": "4",
         "collapse": false
     },
     {
         "id": "2d778ff4.c9c3c",
         "type": "ui_tab",
         "z": "",
-        "name": "Tello Drone",
-        "icon": "dashboard"
+        "name": "Tello Telemetry",
+        "icon": "fa-tachometer"
     }
 ]
