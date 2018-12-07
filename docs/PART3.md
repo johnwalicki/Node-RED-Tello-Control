@@ -10,6 +10,7 @@ The video below shows how commands are sent using the UDP node and also shows ho
 
 You should take the [part3 starter flow](/flows/starter/part3_starter.json) and add an inject and change nodes to enable the following commands:
 
+- emergency
 - up 50cm
 - down 50cm
 - right 50cm

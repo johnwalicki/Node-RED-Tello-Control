@@ -121,7 +121,7 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
+    "x": 150,
     "y": 520,
     "wires": [
         ["2d6ae4ac.aa0a7c"]
@@ -138,7 +138,7 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
+    "x": 150,
     "y": 560,
     "wires": [
         ["ba783d77.bca088"]
@@ -158,7 +158,7 @@
     "randomLast": "5",
     "randomUnits": "seconds",
     "drop": false,
-    "x": 150,
+    "x": 170,
     "y": 600,
     "wires": [
         ["5643eff6.ec8f18"]
@@ -248,7 +248,7 @@
     "name": "TelloControls-Out",
     "links": ["a29bcf39.6c6de"],
     "x": 715,
-    "y": 780,
+    "y": 820,
     "wires": []
 }, {
     "id": "b95c586c.8c901",
@@ -309,7 +309,7 @@
     "to": "",
     "reg": false,
     "x": 520,
-    "y": 640,
+    "y": 680,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -341,7 +341,7 @@
     "to": "",
     "reg": false,
     "x": 530,
-    "y": 720,
+    "y": 760,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -373,7 +373,7 @@
     "to": "",
     "reg": false,
     "x": 540,
-    "y": 800,
+    "y": 840,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -405,7 +405,7 @@
     "to": "",
     "reg": false,
     "x": 530,
-    "y": 680,
+    "y": 720,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -437,7 +437,7 @@
     "to": "",
     "reg": false,
     "x": 520,
-    "y": 760,
+    "y": 800,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -469,7 +469,7 @@
     "to": "",
     "reg": false,
     "x": 530,
-    "y": 840,
+    "y": 880,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -501,7 +501,7 @@
     "to": "",
     "reg": false,
     "x": 510,
-    "y": 880,
+    "y": 920,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -533,7 +533,7 @@
     "to": "",
     "reg": false,
     "x": 520,
-    "y": 920,
+    "y": 960,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -565,7 +565,7 @@
     "to": "",
     "reg": false,
     "x": 510,
-    "y": 1000,
+    "y": 1040,
     "wires": [
         ["3145ad0e.0dcbfa"]
     ]
@@ -581,8 +581,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 120,
-    "y": 640,
+    "x": 160,
+    "y": 680,
     "wires": [
         ["2756b158.40ccee"]
     ]
@@ -598,8 +598,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
-    "y": 680,
+    "x": 170,
+    "y": 720,
     "wires": [
         ["ac4dff7f.907858"]
     ]
@@ -615,8 +615,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
-    "y": 720,
+    "x": 170,
+    "y": 760,
     "wires": [
         ["d396f64e.b14588"]
     ]
@@ -632,8 +632,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 120,
-    "y": 760,
+    "x": 160,
+    "y": 800,
     "wires": [
         ["f6079ef5.508418"]
     ]
@@ -649,8 +649,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 140,
-    "y": 800,
+    "x": 180,
+    "y": 840,
     "wires": [
         ["580f04b9.a1daec"]
     ]
@@ -666,8 +666,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
-    "y": 840,
+    "x": 170,
+    "y": 880,
     "wires": [
         ["8b058113.56ad7"]
     ]
@@ -683,8 +683,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 110,
-    "y": 880,
+    "x": 150,
+    "y": 920,
     "wires": [
         ["2e74d2f1.d3ab06"]
     ]
@@ -700,8 +700,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 120,
-    "y": 960,
+    "x": 160,
+    "y": 1000,
     "wires": [
         ["1f485b3e.bc76ed"]
     ]
@@ -717,8 +717,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 130,
-    "y": 1000,
+    "x": 170,
+    "y": 1040,
     "wires": [
         ["96ce7379.6b475"]
     ]
@@ -734,8 +734,8 @@
     "crontab": "",
     "once": false,
     "onceDelay": "",
-    "x": 110,
-    "y": 920,
+    "x": 150,
+    "y": 960,
     "wires": [
         ["2d3af51b.09b08a"]
     ]
@@ -767,8 +767,51 @@
     "to": "",
     "reg": false,
     "x": 520,
-    "y": 960,
+    "y": 1000,
     "wires": [
         ["3145ad0e.0dcbfa"]
+    ]
+}, {
+    "id": "1fc5b914.5bde5f",
+    "type": "change",
+    "z": "3f2fa13.a214e5e",
+    "name": "Emergency",
+    "rules": [{
+        "t": "delete",
+        "p": "payload",
+        "pt": "msg"
+    }, {
+        "t": "set",
+        "p": "payload.tellocmd",
+        "pt": "msg",
+        "to": "emergency",
+        "tot": "str"
+    }],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 530,
+    "y": 640,
+    "wires": [
+        ["3145ad0e.0dcbfa"]
+    ]
+}, {
+    "id": "b2d91846.6ad7e8",
+    "type": "inject",
+    "z": "3f2fa13.a214e5e",
+    "name": "Emergency",
+    "topic": "",
+    "payload": "true",
+    "payloadType": "bool",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": "",
+    "x": 160,
+    "y": 640,
+    "wires": [
+        ["1fc5b914.5bde5f"]
     ]
 }]
