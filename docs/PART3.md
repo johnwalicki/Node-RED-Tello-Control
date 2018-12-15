@@ -24,7 +24,13 @@ You should take the [part3 starter flow](/flows/starter/part3_starter.json) and 
 
 When you need to pass a parameter for a command, ensure you use the property **payload.tellovalue** so the **format output message** node will generate the correct command to send to the drone.
 
+![Tello Send SDK Commands Starter flow](/docs/screenshots/NodeRED-Tello-Commands-Starter-flow.png?raw=true "Tello Send SDK Commands Starter flow")
+
+### Solution
+
 There is a [solution flow](/flows/solutions/part3_solution.json) available if you need help or want to check your solution.
+
+![Tello Send SDK Commands Solution flow](/docs/screenshots/NodeRED-Tello-Commands-Solution-flow.png?raw=true "Tello Send SDK Commands Solution flow")
 
 ---
 
