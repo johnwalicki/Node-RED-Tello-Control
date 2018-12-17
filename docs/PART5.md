@@ -1,5 +1,5 @@
 # Receive telemetry data from the drone
-In Part 4 you constructed a Node-RED Dashboard flow to send commands to the drone. In this Part 5 exercise, we will create a Node-RED Dashboard with gauges to display telemetry data from the drone.
+In Part 4 you constructed a Node-RED Dashboard flow to send commands to the drone. In this Part 5 exercise, we will create a Node-RED Dashboard with gauges and charts to display telemetry data from the drone.
 
 The video below shows how gauge nodes can be configured to display the telemetry data from the drone.
 
@@ -7,7 +7,7 @@ The video below shows how gauge nodes can be configured to display the telemetry
 
 ## Receiving Tello Telemetry Data
 
-Open Port 8890/udp in laptop firewall to receive Tello telemetry data.
+Open port 8890/udp in your laptop firewall to receive Tello telemetry data.
 
 On Linux
 ```
@@ -22,12 +22,14 @@ On Mac, use System Preferences to open the ports.
 - Click OK.
 
 ## Telemetry Data
-The drone will send telemetry data to port 8890.  The **Parse Status into an object** change node uses a JSONata expression to parse the telemetry data into an JSON Object. 
+The drone will send telemetry data to port 8890.  The **Parse Status into an object** change node uses a JSONata expression to parse the telemetry data into an JSON Object.
 
 - **pitch** : the degree of the attitude pitch.
 - **roll** : the degree of the attitude roll.
 - **yaw** : the degree of the attitude yaw.
+- **vgx** : the speed of the “x” axis.
 - **vgy** : the speed of the “y” axis.
+- **vgz** : the speed of the “z” axis.
 - **templ** : the lowest temperature in degree Celsius.
 - **temph** : the highest temperature in degree Celsius
 - **tof** : the time of flight distance in cm.
@@ -72,12 +74,6 @@ There is a [solution flow](/flows/solutions/part5_solution.json) available if yo
 ![Tello Telemetry Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-Telemetry-Solution-flow.png?raw=true "Tello Telemetry Dashboard Solution flow")
 
 ![Tello Telemetry Dashboard Gauges](/docs/screenshots/NodeRED-Tello-Telemetry-Dashboard-Solution.png?raw=true "Tello Telemetry Dashboard Solution")
----
-
-<- video here ->
-
-<- task instructions here ->
-
 ---
 
 [Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | **Telemetry** | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md)
