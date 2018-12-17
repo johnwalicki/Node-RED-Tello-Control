@@ -21,6 +21,12 @@ On Mac, use System Preferences to open the ports.
 - Ensure that the option next to the application is set to Allow incoming connections.
 - Click OK.
 
+## Telemetry
+The drone will send telemetry data to port 8890.  The **Parse Status into an object** change node uses a JSONata expression to parse the telemetry data into an JSON Object.  For example:
+```
+{"pitch":7,"roll":33,"yaw":-29,"vgx":0,"vgy":0,"vgz":0,"templ":61,"temph":62,"tof":10,"h":0,"bat":43,"baro":39.96,"time":22,"agx":307,"agy":-324,"agz":-930}
+```
+
 ## Task
 
 Begin with the [Part5 starter flow](/flows/starter/part5_starter.json) and add gauge nodes to display telemetry:
