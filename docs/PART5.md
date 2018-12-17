@@ -5,6 +5,22 @@ The video below shows how gauge nodes can be configured to display the telemetry
 
 <- Add video here ->
 
+## Receiving Tello Telemetry Data
+
+Open Port 8890/udp in laptop firewall to receive Tello telemetry data.
+
+On Linux
+```
+$ sudo firewall-cmd --permanent --add-port=8890/udp
+```
+
+On Mac, use System Preferences to open the ports.
+- Open System Preferences > Security & Privacy > Firewall > Firewall Options
+- Click the + / Add button
+- Choose 'node' application from the Applications folder and click Add.
+- Ensure that the option next to the application is set to Allow incoming connections.
+- Click OK.
+
 ## Task
 
 Begin with the [Part5 starter flow](/flows/starter/part5_starter.json) and add gauge nodes to display telemetry:
