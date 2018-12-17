@@ -6,7 +6,7 @@ You can create subflows in Node-RED.  A subflow acts like a function in other pr
 
 ## Task
 
-You should take the [part6 starter flow](/flows/starter/part6_starter.json), which provides you will all the subflow nodes as shown in the video.  You should create a patrol mission for your drone, which comprises of the following tasks:
+Import the [part6 starter flow](/flows/starter/part6_starter.json), which provides you will all the subflow nodes as shown in the video.  You should create a patrol mission for your drone, which comprises of the following tasks:
 
 - Take off
 - Descend 1.5 meters

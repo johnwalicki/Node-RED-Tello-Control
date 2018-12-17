@@ -73,6 +73,8 @@ There is a [solution flow](/flows/solutions/part5_solution.json) available if yo
 
 ![Tello Telemetry Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-Telemetry-Solution-flow.png?raw=true "Tello Telemetry Dashboard Solution flow")
 
+Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu and then click on the launch button.
+
 ![Tello Telemetry Dashboard Gauges](/docs/screenshots/NodeRED-Tello-Telemetry-Dashboard-Solution.png?raw=true "Tello Telemetry Dashboard Solution")
 ---
 

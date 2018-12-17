@@ -23,6 +23,7 @@ Use an ethernet cable to hardwire your laptop to your network so that it can rea
 - Paste the API key from the clipboard into the Visual Recognition node
 - Click on the Done button
 - See screenshot:
+
 ![Tello Watson Visual Recognition API Key](/docs/screenshots/NodeRED-Tello-VisualRecognition-APIkey.png?raw=true "Tello Watson Visual Recognition API Key")
 
 ### Solution
@@ -30,6 +31,8 @@ Use an ethernet cable to hardwire your laptop to your network so that it can rea
 There is a [solution flow](/flows/solutions/part8_solution.json) available if you need help or want to check your solution.
 
 ![Tello Pictures Visual Recognition Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-VisualRecognition-Solution-flow.png?raw=true "Tello Pictures Visual Recognition Dashboard Solution flow")
+
+Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu and then click on the launch button.
 
 ![Tello Pictures Visual Recognition Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-VisualRecognition-Solution.png?raw=true "Tello Pictures Visual Recognition Dashboard Solution")
 
