@@ -13,10 +13,12 @@ You should take the [part6 starter flow](/flows/starter/part6_starter.json), whi
 - Rotate 360º clockwise
 - Complete a square by moving forward 50cm, then rotating 90º and repeating 4 times
 - Land
-  
+
 Be sure to add sufficient delays into your solution to allow the drone to complete all the moves.  Add a new group to the dashboard and then create a button to allow you to start the mission from the dashboard.
 
 You can import a [sample solution](/flows/solutions/part6_solution.json) if you need help or want to compare your solution with a sample solution.
+
+![Tello Mission Starter flow](/docs/screenshots/NodeRED-Tello-Missions-Starter-flow.png?raw=true "Tello Missions Starter flow")
 
 ---
 
