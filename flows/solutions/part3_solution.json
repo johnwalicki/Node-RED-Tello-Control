@@ -1,0 +1,988 @@
+[
+    {
+        "id": "46d53d66.69f3cc",
+        "type": "tab",
+        "label": "Tello SDK commands",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1cb2b9b9.e77ace",
+        "type": "udp out",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "52955",
+        "base64": false,
+        "multicast": "false",
+        "x": 590,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "88548e31.2e5e88",
+        "type": "debug",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 550,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "90bc3fbe.50d47",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "1 - Connect to TELLO-NNNNNN WiFi",
+        "info": "",
+        "x": 200,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f17f9da4.da9ce",
+        "type": "link in",
+        "z": "46d53d66.69f3cc",
+        "name": "TelloControls-In",
+        "links": [
+            "3c8f9e99.f65c2a"
+        ],
+        "x": 95,
+        "y": 180,
+        "wires": [
+            [
+                "21ca8590.71ad42"
+            ]
+        ]
+    },
+    {
+        "id": "bf6321d4.c76c98",
+        "type": "udp in",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "iface": "",
+        "port": "52955",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "7b66039c.d109b4"
+            ]
+        ]
+    },
+    {
+        "id": "7b66039c.d109b4",
+        "type": "debug",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 550,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c85199e8.9aa978",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "Receive Return Strings",
+        "info": "The UDP input node listens for return values",
+        "x": 160,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5c9acd48.c78bfc",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "Send Commands",
+        "info": "This section of the flow formats the Tello command\ninto a single string to be sent to the drone.\n\nFormat is [command] [optional values]\n\nFor a list of Tello SDK commands, visit\nhttps://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf",
+        "x": 160,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a906e629.f60c",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Send Commands to drone ==========================",
+        "info": "",
+        "x": 370,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e6c41a97.6994e",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Handle incoming messages =========================",
+        "info": "",
+        "x": 370,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2a71860e.072c02",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Land",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "178a383e.79a6b8"
+            ]
+        ]
+    },
+    {
+        "id": "9a167994.476a88",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "TakeOff",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 520,
+        "wires": [
+            [
+                "788037a.55fa048"
+            ]
+        ]
+    },
+    {
+        "id": "61fcc550.043e44",
+        "type": "delay",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 150,
+        "y": 560,
+        "wires": [
+            [
+                "f0e47800.b60cf8"
+            ]
+        ]
+    },
+    {
+        "id": "f0e47800.b60cf8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "TakeOff",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "takeoff",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 560,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "788037a.55fa048",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Init",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "command",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 520,
+        "wires": [
+            [
+                "61fcc550.043e44",
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "178a383e.79a6b8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Land",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "land",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 480,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "3c8f9e99.f65c2a",
+        "type": "link out",
+        "z": "46d53d66.69f3cc",
+        "name": "TelloControls-Out",
+        "links": [
+            "f17f9da4.da9ce"
+        ],
+        "x": 655,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "79c3138.3dac3ec",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Send Tello SDK Commands =========================",
+        "info": "For a list of Tello SDK commands, visit\nhttps://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf",
+        "x": 370,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "21ca8590.71ad42",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "format outbound message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$exists(payload.tellovalue) ? payload.tellocmd & ' ' & payload.tellovalue : payload.tellocmd",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "1cb2b9b9.e77ace",
+                "88548e31.2e5e88"
+            ]
+        ]
+    },
+    {
+        "id": "96042f96.a6f48",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Up 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "up",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 640,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "825841d5.c45ea8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Right 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "right",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 720,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "2149370a.de2958",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Forward 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "forward",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 800,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "72ce977b.85749",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Down 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "down",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 680,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "eba9bdb7.5803e8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Left 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "left",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 760,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "374f5e6c.a1891a",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Back 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "back",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 840,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "ae6be809.182f48",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "cw 90º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "cw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "90",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 880,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "43c61f88.2babb8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "ccw 90º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "ccw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "90",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 920,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "72fd932.25eb46c",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Flip f",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "flip",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "f",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 1000,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "f0d9c55e.cc55f8",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Up 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 140,
+        "y": 640,
+        "wires": [
+            [
+                "96042f96.a6f48"
+            ]
+        ]
+    },
+    {
+        "id": "912f2ab6.7b7518",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Down 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 680,
+        "wires": [
+            [
+                "72ce977b.85749"
+            ]
+        ]
+    },
+    {
+        "id": "1064ba13.7a2ac6",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Right 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 720,
+        "wires": [
+            [
+                "825841d5.c45ea8"
+            ]
+        ]
+    },
+    {
+        "id": "26437f8d.5a22",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Left 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 140,
+        "y": 760,
+        "wires": [
+            [
+                "eba9bdb7.5803e8"
+            ]
+        ]
+    },
+    {
+        "id": "ce46713a.d4b6d8",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Forward 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 800,
+        "wires": [
+            [
+                "2149370a.de2958"
+            ]
+        ]
+    },
+    {
+        "id": "6dc87f5a.d1565",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Back 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "374f5e6c.a1891a"
+            ]
+        ]
+    },
+    {
+        "id": "1cb0a27f.85d796",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "cw 90º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 880,
+        "wires": [
+            [
+                "ae6be809.182f48"
+            ]
+        ]
+    },
+    {
+        "id": "5cec1624.6a77b",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Full 360º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 140,
+        "y": 960,
+        "wires": [
+            [
+                "59c99d5.20e8d64"
+            ]
+        ]
+    },
+    {
+        "id": "1f598d3.f6f3373",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Flip forward",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 1000,
+        "wires": [
+            [
+                "72fd932.25eb46c"
+            ]
+        ]
+    },
+    {
+        "id": "926b7f26.edb71",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "ccw 90º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 920,
+        "wires": [
+            [
+                "43c61f88.2babb8"
+            ]
+        ]
+    },
+    {
+        "id": "59c99d5.20e8d64",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "cw 360º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "cw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "360",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 960,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "d9df0550.c8e928",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Emergency",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "emergency",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 600,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "bbc17caa.7b0b68",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Emergency",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 600,
+        "wires": [
+            [
+                "d9df0550.c8e928"
+            ]
+        ]
+    }
+]
