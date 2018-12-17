@@ -1,284 +1,346 @@
-[{
-    "id": "aac05902.f68308",
-    "type": "udp out",
-    "z": "3f2fa13.a214e5e",
-    "name": "",
-    "addr": "192.168.10.1",
-    "iface": "",
-    "port": "8889",
-    "ipv": "udp4",
-    "outport": "52955",
-    "base64": false,
-    "multicast": "false",
-    "x": 630,
-    "y": 200,
-    "wires": []
-}, {
-    "id": "db8f9651.77d2d",
-    "type": "debug",
-    "z": "3f2fa13.a214e5e",
-    "name": "",
-    "active": true,
-    "console": "false",
-    "complete": "false",
-    "x": 590,
-    "y": 160,
-    "wires": []
-}, {
-    "id": "ad7c7de9.d24f88",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "1 - Connect to TELLO-NNNNNN WiFi",
-    "info": "",
-    "x": 240,
-    "y": 100,
-    "wires": []
-}, {
-    "id": "a29bcf39.6c6de",
-    "type": "link in",
-    "z": "3f2fa13.a214e5e",
-    "name": "TelloControls-In",
-    "links": ["3145ad0e.0dcbfa"],
-    "x": 135,
-    "y": 180,
-    "wires": [
-        ["2ee72b80.5fc2bc"]
-    ]
-}, {
-    "id": "8955e5de.818b3",
-    "type": "udp in",
-    "z": "3f2fa13.a214e5e",
-    "name": "",
-    "iface": "",
-    "port": "52955",
-    "ipv": "udp4",
-    "multicast": "false",
-    "group": "",
-    "datatype": "utf8",
-    "x": 160,
-    "y": 400,
-    "wires": [
-        ["b0ae180.eaf97e8"]
-    ]
-}, {
-    "id": "b0ae180.eaf97e8",
-    "type": "debug",
-    "z": "3f2fa13.a214e5e",
-    "name": "",
-    "active": false,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "x": 610,
-    "y": 400,
-    "wires": []
-}, {
-    "id": "db1e51f5.571618",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "Receive Return Strings",
-    "info": "",
-    "x": 180,
-    "y": 360,
-    "wires": []
-}, {
-    "id": "f0ff260.8184fd8",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "Send Commands",
-    "info": "",
-    "x": 200,
-    "y": 140,
-    "wires": []
-}, {
-    "id": "2ee38161.17d0a6",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "================================ Send Commands to drone ==========================",
-    "info": "",
-    "x": 420,
-    "y": 60,
-    "wires": []
-}, {
-    "id": "3a48b5c8.037fa2",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "================================ Handle incoming messages =========================",
-    "info": "",
-    "x": 420,
-    "y": 320,
-    "wires": []
-}, {
-    "id": "da3e288e.1c7cb",
-    "type": "inject",
-    "z": "3f2fa13.a214e5e",
-    "name": "Land",
-    "topic": "",
-    "payload": "true",
-    "payloadType": "bool",
-    "repeat": "",
-    "crontab": "",
-    "once": false,
-    "onceDelay": "",
-    "x": 130,
-    "y": 520,
-    "wires": [
-        ["2d6ae4ac.aa0a7c"]
-    ]
-}, {
-    "id": "82dc508c.c8b4d",
-    "type": "inject",
-    "z": "3f2fa13.a214e5e",
-    "name": "TakeOff",
-    "topic": "",
-    "payload": "true",
-    "payloadType": "bool",
-    "repeat": "",
-    "crontab": "",
-    "once": false,
-    "onceDelay": "",
-    "x": 130,
-    "y": 560,
-    "wires": [
-        ["ba783d77.bca088"]
-    ]
-}, {
-    "id": "31d27a0f.c52aa6",
-    "type": "delay",
-    "z": "3f2fa13.a214e5e",
-    "name": "",
-    "pauseType": "delay",
-    "timeout": "250",
-    "timeoutUnits": "milliseconds",
-    "rate": "1",
-    "nbRateUnits": "1",
-    "rateUnits": "second",
-    "randomFirst": "1",
-    "randomLast": "5",
-    "randomUnits": "seconds",
-    "drop": false,
-    "x": 150,
-    "y": 600,
-    "wires": [
-        ["5643eff6.ec8f18"]
-    ]
-}, {
-    "id": "5643eff6.ec8f18",
-    "type": "change",
-    "z": "3f2fa13.a214e5e",
-    "name": "TakeOff",
-    "rules": [{
-        "t": "delete",
-        "p": "payload",
-        "pt": "msg"
-    }, {
-        "t": "set",
-        "p": "payload.tellocmd",
-        "pt": "msg",
-        "to": "takeoff",
-        "tot": "str"
-    }],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 520,
-    "y": 600,
-    "wires": [
-        ["3145ad0e.0dcbfa"]
-    ]
-}, {
-    "id": "ba783d77.bca088",
-    "type": "change",
-    "z": "3f2fa13.a214e5e",
-    "name": "Init",
-    "rules": [{
-        "t": "delete",
-        "p": "payload",
-        "pt": "msg"
-    }, {
-        "t": "set",
-        "p": "payload.tellocmd",
-        "pt": "msg",
-        "to": "command",
-        "tot": "str"
-    }],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 510,
-    "y": 560,
-    "wires": [
-        ["31d27a0f.c52aa6", "3145ad0e.0dcbfa"]
-    ]
-}, {
-    "id": "2d6ae4ac.aa0a7c",
-    "type": "change",
-    "z": "3f2fa13.a214e5e",
-    "name": "Land",
-    "rules": [{
-        "t": "delete",
-        "p": "payload",
-        "pt": "msg"
-    }, {
-        "t": "set",
-        "p": "payload.tellocmd",
-        "pt": "msg",
-        "to": "land",
-        "tot": "str"
-    }],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 510,
-    "y": 520,
-    "wires": [
-        ["3145ad0e.0dcbfa"]
-    ]
-}, {
-    "id": "3145ad0e.0dcbfa",
-    "type": "link out",
-    "z": "3f2fa13.a214e5e",
-    "name": "TelloControls-Out",
-    "links": ["a29bcf39.6c6de"],
-    "x": 715,
-    "y": 560,
-    "wires": []
-}, {
-    "id": "b95c586c.8c901",
-    "type": "comment",
-    "z": "3f2fa13.a214e5e",
-    "name": "================================ Handle incoming messages =========================",
-    "info": "",
-    "x": 420,
-    "y": 480,
-    "wires": []
-}, {
-    "id": "2ee72b80.5fc2bc",
-    "type": "change",
-    "z": "3f2fa13.a214e5e",
-    "name": "format outbound message",
-    "rules": [{
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "$exists(payload.tellovalue) ? payload.tellocmd & ' ' & payload.tellovalue : payload.tellocmd",
-        "tot": "jsonata"
-    }],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 320,
-    "y": 180,
-    "wires": [
-        ["aac05902.f68308", "db8f9651.77d2d"]
-    ]
-}]
+[
+    {
+        "id": "46d53d66.69f3cc",
+        "type": "tab",
+        "label": "Tello SDK commands",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1cb2b9b9.e77ace",
+        "type": "udp out",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "52955",
+        "base64": false,
+        "multicast": "false",
+        "x": 590,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "88548e31.2e5e88",
+        "type": "debug",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 550,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "90bc3fbe.50d47",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "1 - Connect to TELLO-NNNNNN WiFi",
+        "info": "",
+        "x": 200,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f17f9da4.da9ce",
+        "type": "link in",
+        "z": "46d53d66.69f3cc",
+        "name": "TelloControls-In",
+        "links": [
+            "3c8f9e99.f65c2a"
+        ],
+        "x": 95,
+        "y": 180,
+        "wires": [
+            [
+                "21ca8590.71ad42"
+            ]
+        ]
+    },
+    {
+        "id": "bf6321d4.c76c98",
+        "type": "udp in",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "iface": "",
+        "port": "52955",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "7b66039c.d109b4"
+            ]
+        ]
+    },
+    {
+        "id": "7b66039c.d109b4",
+        "type": "debug",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 550,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c85199e8.9aa978",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "Receive Return Strings",
+        "info": "The UDP input node listens for return values",
+        "x": 160,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5c9acd48.c78bfc",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "Send Commands",
+        "info": "This section of the flow formats the Tello command\ninto a single string to be sent to the drone.\n\nFormat is [command] [optional values]\n\nFor a list of Tello SDK commands, visit\nhttps://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf",
+        "x": 160,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a906e629.f60c",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Send Commands to drone ==========================",
+        "info": "",
+        "x": 370,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e6c41a97.6994e",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Handle incoming messages =========================",
+        "info": "",
+        "x": 370,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2a71860e.072c02",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "Land",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "178a383e.79a6b8"
+            ]
+        ]
+    },
+    {
+        "id": "9a167994.476a88",
+        "type": "inject",
+        "z": "46d53d66.69f3cc",
+        "name": "TakeOff",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 520,
+        "wires": [
+            [
+                "788037a.55fa048"
+            ]
+        ]
+    },
+    {
+        "id": "61fcc550.043e44",
+        "type": "delay",
+        "z": "46d53d66.69f3cc",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 150,
+        "y": 560,
+        "wires": [
+            [
+                "f0e47800.b60cf8"
+            ]
+        ]
+    },
+    {
+        "id": "f0e47800.b60cf8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "TakeOff",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "takeoff",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 560,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "788037a.55fa048",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Init",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "command",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 520,
+        "wires": [
+            [
+                "61fcc550.043e44",
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "178a383e.79a6b8",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "Land",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "land",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 480,
+        "wires": [
+            [
+                "3c8f9e99.f65c2a"
+            ]
+        ]
+    },
+    {
+        "id": "3c8f9e99.f65c2a",
+        "type": "link out",
+        "z": "46d53d66.69f3cc",
+        "name": "TelloControls-Out",
+        "links": [
+            "f17f9da4.da9ce"
+        ],
+        "x": 695,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "79c3138.3dac3ec",
+        "type": "comment",
+        "z": "46d53d66.69f3cc",
+        "name": "================================ Send Tello SDK Commands =========================",
+        "info": "For a list of Tello SDK commands, visit\nhttps://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf",
+        "x": 370,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "21ca8590.71ad42",
+        "type": "change",
+        "z": "46d53d66.69f3cc",
+        "name": "format outbound message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$exists(payload.tellovalue) ? payload.tellocmd & ' ' & payload.tellovalue : payload.tellocmd",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "1cb2b9b9.e77ace",
+                "88548e31.2e5e88"
+            ]
+        ]
+    }
+]

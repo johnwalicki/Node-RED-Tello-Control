@@ -1,0 +1,591 @@
+[
+    {
+        "id": "865602f6.dc2338",
+        "type": "tab",
+        "label": "Tello Picture Dash",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5b0a7d4e.258d2c",
+        "type": "udp out",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "52955",
+        "base64": false,
+        "multicast": "false",
+        "x": 930,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d8f0f1c9.9d5b6",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "Tello Send Cmd",
+        "func": "var TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t];\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t]\n\n\t\t\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0 ;\n\t\tvar seed = 0x3692 ;\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t} \n\t\treturn seed ;\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0 ;\n\t\tvar seed = 0x77 ;\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t}\n\t\treturn seed ;\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data) {\n\t\tvar size = 11 + (data?data.length:0);\n\t\tvar bb = Buffer.alloc(size)\n\t\tvar packetTypeInfo = 0x40 | ((pacType & 0x07) <<3);\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt8((size << 3) & 0xFF ,1)\n\t\tbb.writeUInt8((size >> 5) & 0xFF ,2)\n\t\n    \tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(packetTypeInfo,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data) {\n\t\t\tfor (var i=0; i<data.length; i++) {\n\t\t\t\tbb.writeUInt8(data[i], [9+i]);\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2) ;\n\t\treturn bb ;\n\t}\n\t\nvar seqID = global.get(\"seqID\");\nif (\"undefined\" === typeof seqID) {\n    seqID = -1 ;\n}\nseqID++ ;\nglobal.set(\"seqID\", seqID);\n\n\nvar out = buildPacket(msg.payload.packType, msg.payload.TelloCmdId, seqID, msg.payload.data);\nmsg.payload = out;\nmsg.hex = out.toString('hex');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "5b0a7d4e.258d2c"
+            ]
+        ]
+    },
+    {
+        "id": "cb99267f.854da8",
+        "type": "change",
+        "z": "865602f6.dc2338",
+        "name": "TELLO_CMD_TAKEPIC - 48",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"TelloCmdId\":48,\"packType\":5}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "d8f0f1c9.9d5b6"
+            ]
+        ]
+    },
+    {
+        "id": "d61e7a62.713d18",
+        "type": "inject",
+        "z": "865602f6.dc2338",
+        "name": "TELLO_CMD_TAKEPIC",
+        "topic": "",
+        "payload": "TELLO_CMD_TAKEPIC",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 100,
+        "wires": [
+            [
+                "cb99267f.854da8"
+            ]
+        ]
+    },
+    {
+        "id": "4918976f.81511",
+        "type": "udp in",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "iface": "",
+        "port": "52955",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "buffer",
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "a3804454.755fb8"
+            ]
+        ]
+    },
+    {
+        "id": "a3804454.755fb8",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "parse incoming messages",
+        "func": "//var TELLO_CMD_ALT_LIMIT = 4182;\n//var TELLO_CMD_LIGHT_STRENGTH = 53;\n//var TELLO_CMD_LOW_BATT_THRESHOLD = 4183;\n//var TELLO_CMD_STATUS = 86;\n//var TELLO_CMD_LOG_HEADER_WRITE = 4176;\n//var TELLO_CMD_LOG_DATA_WRITE = 4177;\n\nvar TELLO_msgDoConnect           = 0x0001 // 1\nvar TELLO_msgConnected           = 0x0002 // 2\nvar TELLO_msgQuerySSID           = 0x0011 // 17\nvar TELLO_msgSetSSID             = 0x0012 // 18\nvar TELLO_msgQuerySSIDPass       = 0x0013 // 19\nvar TELLO_msgSetSSIDPass         = 0x0014 // 20\nvar TELLO_msgQueryWifiRegion     = 0x0015 // 21\nvar TELLO_msgSetWifiRegion       = 0x0016 // 22\nvar TELLO_msgWifiStrength        = 0x001a // 26\nvar TELLO_msgSetVideoBitrate     = 0x0020 // 32\nvar TELLO_msgSetDynAdjRate       = 0x0021 // 33\nvar TELLO_msgEisSetting          = 0x0024 // 36\nvar TELLO_msgQueryVideoSPSPPS    = 0x0025 // 37\nvar TELLO_msgQueryVideoBitrate   = 0x0028 // 40\nvar TELLO_msgDoTakePic           = 0x0030 // 48\nvar TELLO_msgSwitchPicVideo      = 0x0031 // 49\nvar TELLO_msgDoStartRec          = 0x0032 // 50\nvar TELLO_msgExposureVals        = 0x0034 // 52 (Get or set?)\nvar TELLO_msgLightStrength       = 0x0035 // 53\nvar TELLO_msgQueryJPEGQuality    = 0x0037 // 55\nvar TELLO_msgError1              = 0x0043 // 67\nvar TELLO_msgError2              = 0x0044 // 68\nvar TELLO_msgQueryVersion        = 0x0045 // 69\nvar TELLO_msgSetDateTime         = 0x0046 // 70\nvar TELLO_msgQueryActivationTime = 0x0047 // 71\nvar TELLO_msgQueryLoaderVersion  = 0x0049 // 73\nvar TELLO_msgSetStick            = 0x0050 // 80\nvar TELLO_msgDoTakeoff           = 0x0054 // 84\nvar TELLO_msgDoLand              = 0x0055 // 85\nvar TELLO_msgFlightStatus        = 0x0056 // 86\nvar TELLO_msgSetHeightLimit      = 0x0058 // 88\nvar TELLO_msgDoFlip              = 0x005c // 92\nvar TELLO_msgDoThrowTakeoff      = 0x005d // 93\nvar TELLO_msgDoPalmLand          = 0x005e // 94\nvar TELLO_msgFileSize            = 0x0062 // 98\nvar TELLO_msgFileData            = 0x0063 // 99\nvar TELLO_msgFileDone            = 0x0064 // 100\nvar TELLO_msgDoSmartVideo        = 0x0080 // 128\nvar TELLO_msgSmartVideoStatus    = 0x0081 // 129\nvar TELLO_msgLogHeader           = 0x1050 // 4176\nvar TELLO_msgLogData             = 0x1051 // 4177\nvar TELLO_msgLogConfig           = 0x1052 // 4178\nvar TELLO_msgDoBounce            = 0x1053 // 4179\nvar TELLO_msgDoCalibration       = 0x1054 // 4180\nvar TELLO_msgSetLowBattThresh    = 0x1055 // 4181\nvar TELLO_msgQueryHeightLimit    = 0x1056 // 4182\nvar TELLO_msgQueryLowBattThresh  = 0x1057 // 4183\nvar TELLO_msgSetAttitude         = 0x1058 // 4184\nvar TELLO_msgQueryAttitude       = 0x1059 // 4185\n\nvar seqID ;\nvar pacType;\n\nfunction parsePacket (bb) {\n    var ret = {};\n\tvar size = bb.length;\n\tvar payload = bb.slice(9,size);\n\tvar dataSize = 0;\n\tvar cmdID    = 0;\n\n\tif (bb.length >= 11) {\n\t\tvar mark = bb.readUInt8(0);\n\t\tif (mark == 0xCC) {\t// start of packet\n\t\t    size      = bb.readUInt16LE(1) >> 3;\n\t\t    var crc8  = bb.readUInt8(3);\n\t\t    pacType   = bb.readUInt8(4);\n\t\t    cmdID     = bb.readUInt16LE(5);\n\t\t    seqID     = bb.readUInt16LE(7);\n\t        dataSize  = size - 11;\n\t        var data  = false;\n\t        if (dataSize > 0) {\n\t            data = bb.slice(9, size-2);\n\t        }\n\t        var crc16 = bb.readUInt16LE(size - 2);\n\t        \n\t        ret.cmd = cmdID;\n\t        ret.seq = seqID;\n\t        ret.pacType= pacType;\n\t        ret.dataSize = dataSize;\n\t        ret.data = data;\n\t\t} else {\n\t\t    ret = bb.toString();\n\t\t}\n\t} else {\n\t    ret = bb.toString();\n\t}\n\treturn ret;\n}\n\t\nmsg.payload = parsePacket(msg.payload);\nif (msg.payload.cmd) {\n    var tstatus = global.get(\"tellomsg\") | {};\n    tstatus.cmdID  = msg.payload.cmd;\n    tstatus.seqID  = msg.payload.seq;\n    tstatus.pacType= msg.payload.pacType;\n    global.set(\"tellomsg\",tstatus);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 320,
+        "y": 280,
+        "wires": [
+            [
+                "8df549.78793ab8"
+            ]
+        ]
+    },
+    {
+        "id": "9203aa1b.6b2c6",
+        "type": "debug",
+        "z": "865602f6.dc2338",
+        "name": "Otherwise",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 700,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "a1f903c9.9ca2d",
+        "type": "comment",
+        "z": "865602f6.dc2338",
+        "name": "Receive Return Strings",
+        "info": "",
+        "x": 160,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "43ff55ff.8f10e4",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "Send Con_Req",
+        "func": "videoPort = 6038;\nmsg = {};\nmsg.payload = new Buffer(\"conn_req:lh\");\nmsg.payload[9] = videoPort & 0xFF;\nmsg.payload[10] = (videoPort >> 8) & 0xFF;\nglobal.set(\"seqID\", -1);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 60,
+        "wires": [
+            [
+                "5b0a7d4e.258d2c"
+            ]
+        ]
+    },
+    {
+        "id": "4603c589.6ed634",
+        "type": "inject",
+        "z": "865602f6.dc2338",
+        "name": "TELLO_LOW_LEVEL_CONNECT",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 200,
+        "y": 60,
+        "wires": [
+            [
+                "43ff55ff.8f10e4"
+            ]
+        ]
+    },
+    {
+        "id": "8df549.78793ab8",
+        "type": "switch",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "property": "payload.cmd",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "86",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "26",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "53",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "4176",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "98",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "99",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "48",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 8,
+        "x": 510,
+        "y": 280,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [
+                "3f41ea5b.baa436"
+            ],
+            [
+                "2b644e1c.14938a"
+            ],
+            [
+                "ef29b4f9.1ae9"
+            ],
+            [
+                "9203aa1b.6b2c6"
+            ]
+        ],
+        "outputLabels": [
+            "FlightStatus",
+            "WifiStrength",
+            "LightStrength",
+            "LogHeader",
+            "FileSize",
+            "FileData",
+            "DoTakePic",
+            "otherwise"
+        ]
+    },
+    {
+        "id": "ef29b4f9.1ae9",
+        "type": "debug",
+        "z": "865602f6.dc2338",
+        "name": "DoTakePic",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 710,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "aa8ecfdc.aa0128",
+        "type": "link in",
+        "z": "865602f6.dc2338",
+        "name": "TELLO-SND_LOW_LEVEL_CMD",
+        "links": [
+            "d9406e9d.313378"
+        ],
+        "x": 555,
+        "y": 140,
+        "wires": [
+            [
+                "d8f0f1c9.9d5b6"
+            ]
+        ]
+    },
+    {
+        "id": "3f41ea5b.baa436",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "unpack FileSize message",
+        "func": "// Ignore if not from drone\nif (0x80 & msg.payload.pacType) {\n    msg.payload.fileType = msg.payload.data.readInt8(0);\n    msg.payload.fileSize = msg.payload.data.readInt32LE(1);\n    msg.payload.fileID = msg.payload.data.readInt16LE(5);\n    flow.set(\"file\" +  msg.payload.fileID, {\"size\" : msg.payload.fileSize, \n                                \"receivedBytes\" : 0,\n                                \"imageBytes\" : Buffer.alloc(msg.payload.fileSize),\n                                \"pieces\" : {}\n                            });\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 260,
+        "wires": [
+            [
+                "c6da806c.43e838"
+            ]
+        ]
+    },
+    {
+        "id": "c6da806c.43e838",
+        "type": "change",
+        "z": "865602f6.dc2338",
+        "name": "Ack FileSizeMsg",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"TelloCmdId\":98,\"data\":[0],\"packType\":2}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 260,
+        "wires": [
+            [
+                "d9406e9d.313378"
+            ]
+        ]
+    },
+    {
+        "id": "d9406e9d.313378",
+        "type": "link out",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "links": [
+            "aa8ecfdc.aa0128"
+        ],
+        "x": 1135,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2b644e1c.14938a",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "Unpack FileData message",
+        "func": "var fileID = msg.payload.data.readInt16LE(0);\nvar filePiece = msg.payload.data.readInt32LE(2);\nvar fileChunk = msg.payload.data.readInt32LE(6);\nvar chunkLen = msg.payload.data.readInt16LE(10);\nvar file = flow.get(\"file\" + fileID);\nif ((!file) || (\"undefined\" === typeof file.receivedBytes)) {\n    msg.payload = {};\n} else {\n    msg.payload.data.copy(file.imageBytes, 1024*fileChunk, 12);\n    msg.payload = {};\n    msg.payload.unpackedHeader = {\"ID\" : fileID, \n                \"piece\" : filePiece,\n                \"chunk\" : fileChunk,\n                \"len\" : chunkLen\n    };\n    if (file.pieces[filePiece]) {\n        if (!file.pieces[filePiece].includes(fileChunk)) {\n            file.pieces[filePiece].push(fileChunk);\n            file.receivedBytes += chunkLen;\n            if (8 == file.pieces[filePiece].length) {\n                msg.payload.TelloCmdId = 99;\n                msg.payload.packType = 2;\n                msg.payload.data = Buffer.alloc(7);\n                msg.payload.data.writeInt8(0, 0);\n                msg.payload.data.writeInt16LE(fileID, 1);\n                msg.payload.data.writeInt32LE(filePiece, 3);\n            }\n        }\n    } else {\n        msg.payload = {};\n        msg.payload.unpackedHeader = {\"ID\" : fileID, \n                \"piece\" : filePiece,\n                \"chunk\" : fileChunk,\n                \"len\" : chunkLen\n        };\n        file.pieces[filePiece] = [fileChunk];\n        file.receivedBytes += chunkLen;\n    }\n    msg.payload.unpackedHeader.receivedBytes = file.receivedBytes;\n    \n    if (file.receivedBytes == file.size) {\n        flow.set ([\"file\" + fileID], null);\n        msg.payload.TelloCmdId = 99;\n        msg.payload.packType = 2;\n        msg.payload.data = Buffer.alloc(7);\n        msg.payload.data.writeInt8(1, 0);\n        msg.payload.data.writeInt16LE(fileID, 1);\n        msg.payload.data.writeInt32LE(filePiece, 3);\n        \n        msg1 = {\"payload\" : {}};\n        msg1.payload.TelloCmdId = 100;\n        msg1.payload.packType = 1;\n        return [[msg, msg1], {\"payload\":file.imageBytes}];\n    } else if (msg.payload.TelloCmdId) {\n        flow.set(\"file\" + fileID, file);\n        return [msg, null];\n    } else {\n        flow.set(\"file\" + fileID, file);\n        return [null, null];\n    }\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "d9406e9d.313378"
+            ],
+            [
+                "7deed9e0.4b1ec"
+            ]
+        ],
+        "outputLabels": [
+            "completedPieceAck",
+            "Received image"
+        ]
+    },
+    {
+        "id": "a40bb8cc.dae26",
+        "type": "ui_template",
+        "z": "865602f6.dc2338",
+        "group": "230dc716.b089d",
+        "name": "Photo",
+        "order": 2,
+        "width": "12",
+        "height": "9",
+        "format": "<div ng-bind-html></div>\n<img width=\"300\" height=\"300\" alt=\"Watson Image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 710,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6376d619.fd6d28",
+        "type": "change",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "template",
+                "pt": "msg",
+                "to": "<div ng-bind-html></div> <img width=\"300\" height=\"300\" alt=\"Watson Image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 500,
+        "wires": [
+            [
+                "a40bb8cc.dae26"
+            ]
+        ]
+    },
+    {
+        "id": "22e77fcb.046f6",
+        "type": "base64",
+        "z": "865602f6.dc2338",
+        "name": "Encode",
+        "x": 260,
+        "y": 500,
+        "wires": [
+            [
+                "6376d619.fd6d28"
+            ]
+        ]
+    },
+    {
+        "id": "eda2f263.8283c8",
+        "type": "ui_button",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "group": "230dc716.b089d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Take Picture",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "cb99267f.854da8"
+            ]
+        ]
+    },
+    {
+        "id": "7deed9e0.4b1ec",
+        "type": "link out",
+        "z": "865602f6.dc2338",
+        "name": "Picture Arrived",
+        "links": [
+            "d64a7534.24e1e"
+        ],
+        "x": 1135,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d64a7534.24e1e",
+        "type": "link in",
+        "z": "865602f6.dc2338",
+        "name": "Picture Processing",
+        "links": [
+            "7deed9e0.4b1ec"
+        ],
+        "x": 75,
+        "y": 520,
+        "wires": [
+            [
+                "22e77fcb.046f6",
+                "260d5e26.d8e4c2"
+            ]
+        ]
+    },
+    {
+        "id": "260d5e26.d8e4c2",
+        "type": "visual-recognition-v3",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 290,
+        "y": 560,
+        "wires": [
+            [
+                "b3708723.4334d",
+                "9b3be2d6.9aee6"
+            ]
+        ]
+    },
+    {
+        "id": "b3708723.4334d",
+        "type": "function",
+        "z": "865602f6.dc2338",
+        "name": "Process Results",
+        "func": "if (typeof msg.result == 'undefined') {\n    return null;\n}\n\nif (typeof msg.result.error != 'undefined') {\n    //The Lite Plan allows users to make 7,500 API calls for free\n    // Daily limit is  (up to 250 calls per day) \n    // {\"status\":\"ERROR\",\"statusInfo\":\"Key is over transaction limit\"}\n    msg.template = msg.result.error.message;\n    return msg;\n}\n\n// Text Extraction\nif (typeof msg.result.images[0].text != 'undefined') {\n    var image_text = msg.result.images[0].text;\n    msg.payload = image_text;\n    msg.template = image_text;\n    if( image_text.length >0 ) {\n       msg.template= \"Watson found the words: \"+image_text;\n    }\n    return msg;\n}\n\nvar bestcolor = -1;\nvar colorscore = 0;\nvar c_id = 0;\nvar say = \"\";\nvar item;\n\nfor ( c_id=0; c_id < (msg.result.images[0].classifiers.length); c_id++ ){\n    // find the best color, if any\n    for( i =0; i<(msg.result.images[0].classifiers[c_id].classes.length); i++ ){\n      var object = msg.result.images[0].classifiers[c_id].classes[i].class;\n      if ( object.includes(\"color\") ) {\n        if( msg.result.images[0].classifiers[c_id].classes[i].score > colorscore){\n            bestcolor = i;\n            colorscore = msg.result.images[0].classifiers[c_id].classes[i].score;\n        }\n      }\n    }\n \n    var bestItem = 0;\n    var itemScore = 0;\n    for( i =0; i<(msg.result.images[0].classifiers[c_id].classes.length); i++ ){\n      var object = msg.result.images[0].classifiers[c_id].classes[i].class;\n      if ( !object.includes(\"color\") ) {\n        if( msg.result.images[0].classifiers[c_id].classes[i].score > itemScore){\n//            bestItem = i;\n            bestItem = 0;\n            itemScore =  msg.result.images[0].classifiers[c_id].classes[i].score;\n        }\n      }\n    }\n \n     if( bestcolor != \"-1\") {\n        // found a color\n        item = msg.result.images[0].classifiers[c_id].classes[bestcolor].class + \" \" + msg.result.images[0].classifiers[c_id].classes[bestItem].class;\n        bestcolor = -1;\n    } else {\n       item = msg.result.images[0].classifiers[c_id].classes[bestItem].class;\n    }\n//    say = say + \" Watson's \" + msg.result.images[0].classifiers[c_id].name + \" classifier thinks this picture contains a \" + item +\".\";\n    say = say + \" Watson thinks this picture contains a \" + item +\".\";\n}\nmsg.payload =  say;\n\nvar picInfo = msg.result.images[0].classifiers[0].classes;\nvar arrayLength = picInfo.length;\n\nmsg.template=\"<style>\";\nmsg.template=msg.template+\"table { width: 440px; margin-top: 10px; }\";\nmsg.template=msg.template+\"tr:nth-child(even){background-color: #f2f2f2;}\";\nmsg.template=msg.template+\"th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; width: 10%;}\";\nmsg.template=msg.template+\"</style>\";\n\nmsg.template=msg.template+\"<h2>\"+say+\"</h2><table span=100%><tr><th>Class</th><th>Confidence</th></tr>\";\nfor (var i = 0; i < arrayLength; i++) {\n  msg.template = msg.template + \"<tr><td>\" + picInfo[i].class + \"</td><td>\" + picInfo[i].score + \"</td></tr>\";\n}\nmsg.template = msg.template + \"</table>\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 560,
+        "wires": [
+            [
+                "21d0b160.4f3b36",
+                "5834c0fd.031ec"
+            ]
+        ]
+    },
+    {
+        "id": "9b3be2d6.9aee6",
+        "type": "debug",
+        "z": "865602f6.dc2338",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "result",
+        "x": 490,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5834c0fd.031ec",
+        "type": "ui_template",
+        "z": "865602f6.dc2338",
+        "group": "90432f75.726208",
+        "name": "Results Table",
+        "order": 1,
+        "width": "9",
+        "height": "10",
+        "format": "",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 740,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "21d0b160.4f3b36",
+        "type": "debug",
+        "z": "865602f6.dc2338",
+        "name": "What did Watson find?",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 760,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "230dc716.b089d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Drone Image",
+        "tab": "192b6a33.f665ce",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "90432f75.726208",
+        "type": "ui_group",
+        "z": "",
+        "name": "Results",
+        "tab": "192b6a33.f665ce",
+        "order": 2,
+        "disp": true,
+        "width": "9"
+    },
+    {
+        "id": "192b6a33.f665ce",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Tello Camera",
+        "icon": "fa-tachometer",
+        "order": 5
+    }
+]
