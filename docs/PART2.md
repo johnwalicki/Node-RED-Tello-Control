@@ -1,6 +1,8 @@
 # Install Node-RED
 
-Before programming the Tello using Node-RED, several pre-requiste software packages need to be installed.
+Before programming the Tello using Node-RED, several pre-requiste software packages need to be installed on your laptop or workstation.  
+
+To control the drone you need to connect your laptop or workstation to the drone WiFi access point, so Node-RED needs to be running locally, rather than in the cloud.
 
 - [Node.js Installation Instructions](https://nodejs.org/en/download/)
 - [Node-RED Installation Instructions](https://nodered.org/docs/getting-started/installation)

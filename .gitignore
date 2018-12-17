@@ -1,7 +1,12 @@
+######################################
+# Visual Studio Code generated files #
+######################################
 *.code-workspace
+.vscode
 
-# OS generated files #
-######################
+######################################
+# OS generated files                 #
+######################################
 .DS_Store
 .DS_Store?
 ._*
