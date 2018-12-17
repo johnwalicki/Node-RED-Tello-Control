@@ -21,8 +21,25 @@ On Mac, use System Preferences to open the ports.
 - Ensure that the option next to the application is set to Allow incoming connections.
 - Click OK.
 
-## Telemetry
-The drone will send telemetry data to port 8890.  The **Parse Status into an object** change node uses a JSONata expression to parse the telemetry data into an JSON Object.  For example:
+## Telemetry Data
+The drone will send telemetry data to port 8890.  The **Parse Status into an object** change node uses a JSONata expression to parse the telemetry data into an JSON Object. 
+
+- **pitch** : the degree of the attitude pitch.
+- **roll** : the degree of the attitude roll.
+- **yaw** : the degree of the attitude yaw.
+- **vgy** : the speed of the “y” axis.
+- **templ** : the lowest temperature in degree Celsius.
+- **temph** : the highest temperature in degree Celsius
+- **tof** : the time of flight distance in cm.
+- **h** : the height in cm.
+- **bat** : the percentage of the current battery level.
+- **baro** : the barometer measurement in cm.
+- **time** : the amount of time the motor has been used.
+- **agx** : the acceleration of the “x” axis.
+- **agy** : the acceleration of the “y” axis.
+- **agz** : the acceleration of the “z” axis.
+
+JSON Object example output:
 ```
 {"pitch":7,"roll":33,"yaw":-29,"vgx":0,"vgy":0,"vgz":0,"templ":61,"temph":62,"tof":10,"h":0,"bat":43,"baro":39.96,"time":22,"agx":307,"agy":-324,"agz":-930}
 ```
