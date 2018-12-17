@@ -1,4 +1,4 @@
-# Send SDK commands to the drone
+# Send SDK commands to the Tello drone
 
 Now that Node-RED is setup and configured we will start to send commands to the drone.  The SDK documentation, available from [the Ryze downloads page](https://www.ryzerobotics.com/tello-edu/downloads) details all the available commands.
 
@@ -8,7 +8,7 @@ The video below shows how commands are sent using the UDP node and also shows ho
 
 ## Task
 
-You should take the [part3 starter flow](/flows/starter/part3_starter.json) and add an inject and change nodes to enable the following commands:
+Begin with the [Part3 starter flow](/flows/starter/part3_starter.json) and add an inject and change nodes to enable the following commands:
 
 - emergency
 - up 50cm
@@ -22,7 +22,7 @@ You should take the [part3 starter flow](/flows/starter/part3_starter.json) and 
 - rotate clockwise 360º
 - flip forward
 
-When you need to pass a parameter for a command, ensure you use the property **payload.tellovalue** so the **format output message** node will generate the correct command to send to the drone.
+When you need to pass a parameter for a command, ensure you use the property **msg.payload.tellovalue** so the **format output message** node will generate the correct command to send to the drone.
 
 ![Tello Send SDK Commands Starter flow](/docs/screenshots/NodeRED-Tello-Commands-Starter-flow.png?raw=true "Tello Send SDK Commands Starter flow")
 
