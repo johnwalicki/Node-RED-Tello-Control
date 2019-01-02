@@ -39,7 +39,7 @@ There is a [solution flow](/flows/solutions/part9_solution.json) available if yo
 
 Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu and then click on the launch button.
 
-![Tello Custom Classifier Visual Recognition Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-VisualRecognition-Solution.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution")
+![Tello Custom Classifier Visual Recognition Dashboard Solution Developer Selfie](/docs/screenshots/NodeRED-Tello-DeveloperSelfie.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution")
 
 ---
 
