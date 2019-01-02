@@ -26,7 +26,7 @@ Follow the instructions in this [tutorial](https://developer.ibm.com/tutorials/d
 - Turn to the Node-RED Dashboard - Tello Camera Dashboard.
 - Paste the Model ID into the dashboard
 - Press the button to start taking pictures every 10 seconds.
-- TakeO-Off
+- Take-Off
 - See screenshot:
 
 ![Tello Custom Classifier Visual Recognition Dashboard Solution](/docs/screenshots/NodeRED-Tello-CustomClassifierVisualRecognition-Dashboard.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution")

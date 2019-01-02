@@ -34,6 +34,7 @@ To help you get familiar with Node-RED and how to control the Tello drone this g
 6. [Create missions for your drone](/docs/PART6.md)
 7. [Take pictures](/docs/PART7.md)
 8. [Use Visual Recognition on drone pictures](/docs/PART8.md)
+9. [Train a Visual Recognition Custom Classifier of drone pictures](/docs/PART9.md)
 
 As a reminder, **Safety First!**  Take caution when flying your drone. Fly your drone indoors at your own risk.
 Also, be respectful of your neighbors and public property when flying your drone outdoors.  When recording video
@@ -48,7 +49,7 @@ flight prohibitions.
 
 ___
 
-Enjoy!  Give me [feedback](https://github.com/johnwalicki/Node-RED-Tello-Control/issues) if you have suggestions on how to improve this tutorial.
+Enjoy!  Give us [feedback](https://github.com/johnwalicki/Node-RED-Tello-Control/issues) if you have suggestions on how to improve this tutorial.
 
 ## License
 
