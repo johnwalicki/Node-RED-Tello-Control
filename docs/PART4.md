@@ -38,6 +38,6 @@ There is a [solution flow](/flows/solutions/part4_solution.json) available if yo
 ![Tello Controls Dashboard Buttons](/docs/screenshots/NodeRED-Tello-Controls-Dashboard-Solution.png?raw=true "Tello Controls Dashboard Solution")
 ---
 
-[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | **Dashboard** | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md)
+[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | **Dashboard** | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md) | [Custom Classifier](/docs/PART9.md)
 
 ---

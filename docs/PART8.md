@@ -1,6 +1,6 @@
 # Use Visual Recognition on drone pictures
 
-The Tello has a low level protocol that allows you to take pictures.  This flow sends the take picture command and receives / reconstructs the picture data from the Tello.  Ten it calls the Watson Visual Recognition service to classify what is in the image.
+The Tello has a low level protocol that allows you to take pictures.  This flow sends the take picture command and receives / reconstructs the picture data from the Tello.  Then it calls the Watson Visual Recognition service to classify what is in the image.
 
 ## Task
 ### Connect to the IBM Cloud
@@ -38,6 +38,6 @@ Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu 
 
 ---
 
-[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | **Visual Recognition**
+[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | **Visual Recognition** | [Custom Classifier](/docs/PART9.md)
 
 ---

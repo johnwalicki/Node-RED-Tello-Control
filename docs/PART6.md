@@ -22,6 +22,5 @@ You can import a [sample solution](/flows/solutions/part6_solution.json) if you 
 
 ---
 
-[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | **Mission** | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md)
-
+[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | **Mission** | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md) | [Custom Classifier](/docs/PART9.md)
 ---

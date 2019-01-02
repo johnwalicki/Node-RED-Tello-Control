@@ -1,0 +1,2008 @@
+[
+    {
+        "id": "c4b97d8e.d8bfe",
+        "type": "tab",
+        "label": "Tello Camera Dashboard",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7098d6b.cf530a8",
+        "type": "udp out",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "52955",
+        "base64": false,
+        "multicast": "false",
+        "x": 1030,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "7e41dee4.2da91",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Tello Send Cmd",
+        "func": "var TBL_CRC16 = [\n\t\t\t0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf, 0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,\n\t\t\t0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e, 0x9cc9, 0x8d40, 0xbfdb, 0xae52, 0xdaed, 0xcb64, 0xf9ff, 0xe876,\n\t\t\t0x2102, 0x308b, 0x0210, 0x1399, 0x6726, 0x76af, 0x4434, 0x55bd, 0xad4a, 0xbcc3, 0x8e58, 0x9fd1, 0xeb6e, 0xfae7, 0xc87c, 0xd9f5,\n\t\t\t0x3183, 0x200a, 0x1291, 0x0318, 0x77a7, 0x662e, 0x54b5, 0x453c, 0xbdcb, 0xac42, 0x9ed9, 0x8f50, 0xfbef, 0xea66, 0xd8fd, 0xc974,\n\t\t\t0x4204, 0x538d, 0x6116, 0x709f, 0x0420, 0x15a9, 0x2732, 0x36bb, 0xce4c, 0xdfc5, 0xed5e, 0xfcd7, 0x8868, 0x99e1, 0xab7a, 0xbaf3,\n\t\t\t0x5285, 0x430c, 0x7197, 0x601e, 0x14a1, 0x0528, 0x37b3, 0x263a, 0xdecd, 0xcf44, 0xfddf, 0xec56, 0x98e9, 0x8960, 0xbbfb, 0xaa72,\n\t\t\t0x6306, 0x728f, 0x4014, 0x519d, 0x2522, 0x34ab, 0x0630, 0x17b9, 0xef4e, 0xfec7, 0xcc5c, 0xddd5, 0xa96a, 0xb8e3, 0x8a78, 0x9bf1,\n\t\t\t0x7387, 0x620e, 0x5095, 0x411c, 0x35a3, 0x242a, 0x16b1, 0x0738, 0xffcf, 0xee46, 0xdcdd, 0xcd54, 0xb9eb, 0xa862, 0x9af9, 0x8b70,\n\t\t\t0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7, 0x0840, 0x19c9, 0x2b52, 0x3adb, 0x4e64, 0x5fed, 0x6d76, 0x7cff,\n\t\t\t0x9489, 0x8500, 0xb79b, 0xa612, 0xd2ad, 0xc324, 0xf1bf, 0xe036, 0x18c1, 0x0948, 0x3bd3, 0x2a5a, 0x5ee5, 0x4f6c, 0x7df7, 0x6c7e,\n\t\t\t0xa50a, 0xb483, 0x8618, 0x9791, 0xe32e, 0xf2a7, 0xc03c, 0xd1b5, 0x2942, 0x38cb, 0x0a50, 0x1bd9, 0x6f66, 0x7eef, 0x4c74, 0x5dfd,\n\t\t\t0xb58b, 0xa402, 0x9699, 0x8710, 0xf3af, 0xe226, 0xd0bd, 0xc134, 0x39c3, 0x284a, 0x1ad1, 0x0b58, 0x7fe7, 0x6e6e, 0x5cf5, 0x4d7c,\n\t\t\t0xc60c, 0xd785, 0xe51e, 0xf497, 0x8028, 0x91a1, 0xa33a, 0xb2b3, 0x4a44, 0x5bcd, 0x6956, 0x78df, 0x0c60, 0x1de9, 0x2f72, 0x3efb,\n\t\t\t0xd68d, 0xc704, 0xf59f, 0xe416, 0x90a9, 0x8120, 0xb3bb, 0xa232, 0x5ac5, 0x4b4c, 0x79d7, 0x685e, 0x1ce1, 0x0d68, 0x3ff3, 0x2e7a,\n\t\t\t0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1, 0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,\n\t\t\t0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330, 0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78\n\t\t];\n\t\t\nvar TBL_CRC8 = [\n\t\t\t0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,\n\t\t\t0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,\n\t\t\t0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,\n\t\t\t0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d, 0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,\n\t\t\t0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5, 0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,\n\t\t\t0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58, 0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,\n\t\t\t0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6, 0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,\n\t\t\t0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b, 0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,\n\t\t\t0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f, 0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,\n\t\t\t0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92, 0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,\n\t\t\t0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c, 0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,\n\t\t\t0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1, 0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,\n\t\t\t0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49, 0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,\n\t\t\t0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4, 0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,\n\t\t\t0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a, 0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,\n\t\t\t0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35,\n\t\t]\n\n\t\t\nfunction _calcCRC16 (buf, size) {\n\t\tvar i = 0 ;\n\t\tvar seed = 0x3692 ;\n\t\twhile (size > 0) {\n\t\t\tseed = TBL_CRC16[(seed ^ buf[i]) & 0xff] ^ (seed >> 8)\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t} \n\t\treturn seed ;\n\t}\n\nfunction _calcCRC8 (buf, size) {\n\t\tvar i = 0 ;\n\t\tvar seed = 0x77 ;\n\t\twhile (size > 0) {\n\t\t\tseed =  TBL_CRC8[(seed ^ buf[i]) & 0xff]\n\t\t\ti++ ;\n\t\t\tsize-- ;\n\t\t}\n\t\treturn seed ;\n\t}\n\n\t\nfunction buildPacket(pacType, cmdID, seq, data) {\n\t\tvar size = 11 + (data?data.length:0);\n\t\tvar bb = Buffer.alloc(size)\n\t\tvar packetTypeInfo = 0x40 | ((pacType & 0x07) <<3);\n\t\tbb.writeUInt8(0xCC,0)\n\t\tbb.writeUInt8((size << 3) & 0xFF ,1)\n\t\tbb.writeUInt8((size >> 5) & 0xFF ,2)\n\t\n    \tvar crc8 = _calcCRC8([...bb], 3)\n\t\tbb.writeUInt8(crc8,3);\n\t\tbb.writeUInt8(packetTypeInfo,4);\n\t\tbb.writeUInt16LE(cmdID,5);\n\t\tbb.writeUInt16LE(seq,7);\n\t\t//console.log(\"DBG\", data, len);\n\t\tif (data) {\n\t\t\tfor (var i=0; i<data.length; i++) {\n\t\t\t\tbb.writeUInt8(data[i], [9+i]);\n\t\t\t}\n\t\t}\n\t\tvar crc16 = _calcCRC16([...bb], size - 2);\n\t\tbb.writeUInt16LE(crc16, size-2) ;\n\t\treturn bb ;\n\t}\n\t\nvar seqID = global.get(\"seqID\");\nif (\"undefined\" === typeof seqID) {\n    seqID = -1 ;\n}\nseqID++ ;\nglobal.set(\"seqID\", seqID);\n\n\nvar out = buildPacket(msg.payload.packType, msg.payload.TelloCmdId, seqID, msg.payload.data);\nmsg.payload = out;\nmsg.hex = out.toString('hex');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 120,
+        "wires": [
+            [
+                "7098d6b.cf530a8",
+                "22e9e617.9da17a"
+            ]
+        ]
+    },
+    {
+        "id": "caf06c03.1a2a2",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TELLO_CMD_TAKEPIC - 48",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"TelloCmdId\":48,\"packType\":5}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 120,
+        "wires": [
+            [
+                "7e41dee4.2da91"
+            ]
+        ]
+    },
+    {
+        "id": "bcd5e05a.3e10c8",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TELLO_CMD_TAKEPIC",
+        "topic": "",
+        "payload": "TELLO_CMD_TAKEPIC",
+        "payloadType": "str",
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 170,
+        "y": 80,
+        "wires": [
+            [
+                "682a33e3.fecc2c"
+            ]
+        ]
+    },
+    {
+        "id": "f21f8e6f.6dfe28",
+        "type": "udp in",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "iface": "",
+        "port": "52955",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "buffer",
+        "x": 120,
+        "y": 300,
+        "wires": [
+            [
+                "1369e150.23cfdf"
+            ]
+        ]
+    },
+    {
+        "id": "1369e150.23cfdf",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "parse incoming messages",
+        "func": "//var TELLO_CMD_ALT_LIMIT = 4182;\n//var TELLO_CMD_LIGHT_STRENGTH = 53;\n//var TELLO_CMD_LOW_BATT_THRESHOLD = 4183;\n//var TELLO_CMD_STATUS = 86;\n//var TELLO_CMD_LOG_HEADER_WRITE = 4176;\n//var TELLO_CMD_LOG_DATA_WRITE = 4177;\n\nvar TELLO_msgDoConnect           = 0x0001 // 1\nvar TELLO_msgConnected           = 0x0002 // 2\nvar TELLO_msgQuerySSID           = 0x0011 // 17\nvar TELLO_msgSetSSID             = 0x0012 // 18\nvar TELLO_msgQuerySSIDPass       = 0x0013 // 19\nvar TELLO_msgSetSSIDPass         = 0x0014 // 20\nvar TELLO_msgQueryWifiRegion     = 0x0015 // 21\nvar TELLO_msgSetWifiRegion       = 0x0016 // 22\nvar TELLO_msgWifiStrength        = 0x001a // 26\nvar TELLO_msgSetVideoBitrate     = 0x0020 // 32\nvar TELLO_msgSetDynAdjRate       = 0x0021 // 33\nvar TELLO_msgEisSetting          = 0x0024 // 36\nvar TELLO_msgQueryVideoSPSPPS    = 0x0025 // 37\nvar TELLO_msgQueryVideoBitrate   = 0x0028 // 40\nvar TELLO_msgDoTakePic           = 0x0030 // 48\nvar TELLO_msgSwitchPicVideo      = 0x0031 // 49\nvar TELLO_msgDoStartRec          = 0x0032 // 50\nvar TELLO_msgExposureVals        = 0x0034 // 52 (Get or set?)\nvar TELLO_msgLightStrength       = 0x0035 // 53\nvar TELLO_msgQueryJPEGQuality    = 0x0037 // 55\nvar TELLO_msgError1              = 0x0043 // 67\nvar TELLO_msgError2              = 0x0044 // 68\nvar TELLO_msgQueryVersion        = 0x0045 // 69\nvar TELLO_msgSetDateTime         = 0x0046 // 70\nvar TELLO_msgQueryActivationTime = 0x0047 // 71\nvar TELLO_msgQueryLoaderVersion  = 0x0049 // 73\nvar TELLO_msgSetStick            = 0x0050 // 80\nvar TELLO_msgDoTakeoff           = 0x0054 // 84\nvar TELLO_msgDoLand              = 0x0055 // 85\nvar TELLO_msgFlightStatus        = 0x0056 // 86\nvar TELLO_msgSetHeightLimit      = 0x0058 // 88\nvar TELLO_msgDoFlip              = 0x005c // 92\nvar TELLO_msgDoThrowTakeoff      = 0x005d // 93\nvar TELLO_msgDoPalmLand          = 0x005e // 94\nvar TELLO_msgFileSize            = 0x0062 // 98\nvar TELLO_msgFileData            = 0x0063 // 99\nvar TELLO_msgFileDone            = 0x0064 // 100\nvar TELLO_msgDoSmartVideo        = 0x0080 // 128\nvar TELLO_msgSmartVideoStatus    = 0x0081 // 129\nvar TELLO_msgLogHeader           = 0x1050 // 4176\nvar TELLO_msgLogData             = 0x1051 // 4177\nvar TELLO_msgLogConfig           = 0x1052 // 4178\nvar TELLO_msgDoBounce            = 0x1053 // 4179\nvar TELLO_msgDoCalibration       = 0x1054 // 4180\nvar TELLO_msgSetLowBattThresh    = 0x1055 // 4181\nvar TELLO_msgQueryHeightLimit    = 0x1056 // 4182\nvar TELLO_msgQueryLowBattThresh  = 0x1057 // 4183\nvar TELLO_msgSetAttitude         = 0x1058 // 4184\nvar TELLO_msgQueryAttitude       = 0x1059 // 4185\n\nvar seqID ;\nvar pacType;\n\nfunction parsePacket (bb) {\n    var ret = {};\n\tvar size = bb.length;\n\tvar payload = bb.slice(9,size);\n\tvar dataSize = 0;\n\tvar cmdID    = 0;\n\n\tif (bb.length >= 11) {\n\t\tvar mark = bb.readUInt8(0);\n\t\tif (mark == 0xCC) {\t// start of packet\n\t\t    size      = bb.readUInt16LE(1) >> 3;\n\t\t    var crc8  = bb.readUInt8(3);\n\t\t    pacType   = bb.readUInt8(4);\n\t\t    cmdID     = bb.readUInt16LE(5);\n\t\t    seqID     = bb.readUInt16LE(7);\n\t        dataSize  = size - 11;\n\t        var data  = false;\n\t        if (dataSize > 0) {\n\t            data = bb.slice(9, size-2);\n\t        }\n\t        var crc16 = bb.readUInt16LE(size - 2);\n\t        \n\t        ret.cmd = cmdID;\n\t        ret.seq = seqID;\n\t        ret.pacType= pacType;\n\t        ret.dataSize = dataSize;\n\t        ret.data = data;\n\t\t} else {\n\t\t    ret = bb.toString();\n\t\t}\n\t} else {\n\t    ret = bb.toString();\n\t}\n\treturn ret;\n}\n\t\nmsg.payload = parsePacket(msg.payload);\nif (msg.payload.cmd) {\n    var tstatus = global.get(\"tellomsg\") | {};\n    tstatus.cmdID  = msg.payload.cmd;\n    tstatus.seqID  = msg.payload.seq;\n    tstatus.pacType= msg.payload.pacType;\n    global.set(\"tellomsg\",tstatus);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 320,
+        "y": 300,
+        "wires": [
+            [
+                "33db19e4.d26656"
+            ]
+        ]
+    },
+    {
+        "id": "c8958e46.f4c528",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Otherwise",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 700,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "5c73117f.780158",
+        "type": "comment",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Receive Return Strings",
+        "info": "",
+        "x": 160,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "b81ff79f.d42b38",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Send Con_Req",
+        "func": "videoPort = 6038;\nmsg = {};\nmsg.payload = new Buffer(\"conn_req:lh\");\nmsg.payload[9] = videoPort & 0xFF;\nmsg.payload[10] = (videoPort >> 8) & 0xFF;\nglobal.set(\"seqID\", -1);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 80,
+        "wires": [
+            [
+                "7098d6b.cf530a8"
+            ]
+        ]
+    },
+    {
+        "id": "9a7c6867.b1376",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TELLO_LOW_LEVEL_CONNECT",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "",
+        "x": 200,
+        "y": 40,
+        "wires": [
+            [
+                "2511841e.2b8d0c"
+            ]
+        ]
+    },
+    {
+        "id": "33db19e4.d26656",
+        "type": "switch",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "property": "payload.cmd",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "86",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "26",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "53",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "4176",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "98",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "99",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "48",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 8,
+        "x": 510,
+        "y": 300,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [
+                "5ea6f62d.74278"
+            ],
+            [
+                "7834abec.6c1474"
+            ],
+            [
+                "cd7db440.ceff88"
+            ],
+            [
+                "c8958e46.f4c528"
+            ]
+        ],
+        "outputLabels": [
+            "FlightStatus",
+            "WifiStrength",
+            "LightStrength",
+            "LogHeader",
+            "FileSize",
+            "FileData",
+            "DoTakePic",
+            "otherwise"
+        ]
+    },
+    {
+        "id": "cd7db440.ceff88",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "DoTakePic",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 710,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4a09832e.8d742c",
+        "type": "link in",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TELLO-SND_LOW_LEVEL_CMD",
+        "links": [
+            "48b57ca5.2d58ec"
+        ],
+        "x": 555,
+        "y": 160,
+        "wires": [
+            [
+                "7e41dee4.2da91"
+            ]
+        ]
+    },
+    {
+        "id": "5ea6f62d.74278",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "unpack FileSize message",
+        "func": "// Ignore if not from drone\nif (0x80 & msg.payload.pacType) {\n    msg.payload.fileType = msg.payload.data.readInt8(0);\n    msg.payload.fileSize = msg.payload.data.readInt32LE(1);\n    msg.payload.fileID = msg.payload.data.readInt16LE(5);\n    flow.set(\"file\" +  msg.payload.fileID, {\"size\" : msg.payload.fileSize, \n                                \"receivedBytes\" : 0,\n                                \"imageBytes\" : Buffer.alloc(msg.payload.fileSize),\n                                \"pieces\" : {}\n                            });\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "bec3ebe6.2b63a8"
+            ]
+        ]
+    },
+    {
+        "id": "bec3ebe6.2b63a8",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Ack FileSizeMsg",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"TelloCmdId\":98,\"data\":[0],\"packType\":2}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 280,
+        "wires": [
+            [
+                "48b57ca5.2d58ec"
+            ]
+        ]
+    },
+    {
+        "id": "48b57ca5.2d58ec",
+        "type": "link out",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "links": [
+            "4a09832e.8d742c"
+        ],
+        "x": 1135,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7834abec.6c1474",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Unpack FileData message",
+        "func": "var fileID = msg.payload.data.readInt16LE(0);\nvar filePiece = msg.payload.data.readInt32LE(2);\nvar fileChunk = msg.payload.data.readInt32LE(6);\nvar chunkLen = msg.payload.data.readInt16LE(10);\nvar file = flow.get(\"file\" + fileID);\nif ((!file) || (\"undefined\" === typeof file.receivedBytes)) {\n    msg.payload = {};\n} else {\n    msg.payload.data.copy(file.imageBytes, 1024*fileChunk, 12);\n    msg.payload = {};\n    msg.payload.unpackedHeader = {\"ID\" : fileID, \n                \"piece\" : filePiece,\n                \"chunk\" : fileChunk,\n                \"len\" : chunkLen\n    };\n    if (file.pieces[filePiece]) {\n        if (!file.pieces[filePiece].includes(fileChunk)) {\n            file.pieces[filePiece].push(fileChunk);\n            file.receivedBytes += chunkLen;\n            if (8 == file.pieces[filePiece].length) {\n                msg.payload.TelloCmdId = 99;\n                msg.payload.packType = 2;\n                msg.payload.data = Buffer.alloc(7);\n                msg.payload.data.writeInt8(0, 0);\n                msg.payload.data.writeInt16LE(fileID, 1);\n                msg.payload.data.writeInt32LE(filePiece, 3);\n            }\n        }\n    } else {\n        msg.payload = {};\n        msg.payload.unpackedHeader = {\"ID\" : fileID, \n                \"piece\" : filePiece,\n                \"chunk\" : fileChunk,\n                \"len\" : chunkLen\n        };\n        file.pieces[filePiece] = [fileChunk];\n        file.receivedBytes += chunkLen;\n    }\n    msg.payload.unpackedHeader.receivedBytes = file.receivedBytes;\n    \n    if (file.receivedBytes == file.size) {\n        flow.set ([\"file\" + fileID], null);\n        msg.payload.TelloCmdId = 99;\n        msg.payload.packType = 2;\n        msg.payload.data = Buffer.alloc(7);\n        msg.payload.data.writeInt8(1, 0);\n        msg.payload.data.writeInt16LE(fileID, 1);\n        msg.payload.data.writeInt32LE(filePiece, 3);\n        \n        msg1 = {\"payload\" : {}};\n        msg1.payload.TelloCmdId = 100;\n        msg1.payload.packType = 1;\n        return [[msg, msg1], {\"payload\":file.imageBytes}];\n    } else if (msg.payload.TelloCmdId) {\n        flow.set(\"file\" + fileID, file);\n        return [msg, null];\n    } else {\n        flow.set(\"file\" + fileID, file);\n        return [null, null];\n    }\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 750,
+        "y": 320,
+        "wires": [
+            [
+                "48b57ca5.2d58ec"
+            ],
+            [
+                "b234effd.a2218"
+            ]
+        ],
+        "outputLabels": [
+            "completedPieceAck",
+            "Received image"
+        ]
+    },
+    {
+        "id": "dc2f07c2.49581",
+        "type": "ui_template",
+        "z": "c4b97d8e.d8bfe",
+        "group": "79c2e769.ba6a88",
+        "name": "Photo",
+        "order": 3,
+        "width": "12",
+        "height": "9",
+        "format": "<div ng-bind-html></div>\n<img width=\"300\" height=\"300\" alt=\"Watson Image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 750,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b563706.76077",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "template",
+                "pt": "msg",
+                "to": "<div ng-bind-html></div> <img width=\"300\" height=\"300\" alt=\"Watson Image\" src=\"data:image/jpg;base64,{{msg.payload}}\"/>",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 540,
+        "y": 520,
+        "wires": [
+            [
+                "dc2f07c2.49581"
+            ]
+        ]
+    },
+    {
+        "id": "6fbf2ac7.781e44",
+        "type": "base64",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Encode",
+        "x": 260,
+        "y": 520,
+        "wires": [
+            [
+                "6b563706.76077"
+            ]
+        ]
+    },
+    {
+        "id": "8240ab76.4c4fe",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Start Visual Recognition",
+        "group": "79c2e769.ba6a88",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Start Visual Recognition every 10 seconds",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "cf14a776.da7018"
+            ]
+        ]
+    },
+    {
+        "id": "b234effd.a2218",
+        "type": "link out",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Picture Arrived",
+        "links": [
+            "f7aafebc.0b29f"
+        ],
+        "x": 1135,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "f7aafebc.0b29f",
+        "type": "link in",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Picture Processing",
+        "links": [
+            "b234effd.a2218"
+        ],
+        "x": 75,
+        "y": 540,
+        "wires": [
+            [
+                "6fbf2ac7.781e44",
+                "ebf85fdd.292a58"
+            ]
+        ]
+    },
+    {
+        "id": "469c8cbe.f03e6c",
+        "type": "visual-recognition-v3",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 550,
+        "y": 580,
+        "wires": [
+            [
+                "8efd579.29bba28",
+                "ad334a69.45194"
+            ]
+        ]
+    },
+    {
+        "id": "8efd579.29bba28",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "result",
+        "x": 760,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "fcc4b449.c81f38",
+        "type": "ui_template",
+        "z": "c4b97d8e.d8bfe",
+        "group": "ec122567.2dd23",
+        "name": "Results Table",
+        "order": 1,
+        "width": "9",
+        "height": "14",
+        "format": "",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1120,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "35c9be9a.f0ffba",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "What did Watson find?",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 1140,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "2511841e.2b8d0c",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "connreq",
+        "func": "//var message = new Buffer( 'conn_req:' );\n//msg.payload = message;\n//return msg;\n\nvar out = Buffer.alloc(11);\nout.write('conn_req:');\nmsg.payload = \tout\t;\t\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 40,
+        "wires": [
+            [
+                "7098d6b.cf530a8"
+            ]
+        ]
+    },
+    {
+        "id": "22e9e617.9da17a",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 990,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d555d4d7.8f1b28",
+        "type": "link in",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TelloControls-In",
+        "links": [
+            "46487f23.1b0dc"
+        ],
+        "x": 555,
+        "y": 200,
+        "wires": [
+            [
+                "b6565120.3c7138"
+            ]
+        ]
+    },
+    {
+        "id": "281cf108.cb9da6",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Land",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 760,
+        "wires": [
+            [
+                "9b241806.f3b488"
+            ]
+        ]
+    },
+    {
+        "id": "8e16a1a5.1a1fe8",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TakeOff",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 800,
+        "wires": [
+            [
+                "3a5f0009.46f7c"
+            ]
+        ]
+    },
+    {
+        "id": "e9f7fc2c.cd673",
+        "type": "delay",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 170,
+        "y": 840,
+        "wires": [
+            [
+                "d492b22.c0eef5"
+            ]
+        ]
+    },
+    {
+        "id": "d492b22.c0eef5",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TakeOff",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "takeoff",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 840,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "3a5f0009.46f7c",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Init",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "command",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 800,
+        "wires": [
+            [
+                "e9f7fc2c.cd673",
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "9b241806.f3b488",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Land",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "land",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 760,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "46487f23.1b0dc",
+        "type": "link out",
+        "z": "c4b97d8e.d8bfe",
+        "name": "TelloControls-Out",
+        "links": [
+            "d555d4d7.8f1b28"
+        ],
+        "x": 755,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "b6565120.3c7138",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "format outbound message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$exists(payload.tellovalue) ? payload.tellocmd & ' ' & payload.tellovalue : payload.tellocmd",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 200,
+        "wires": [
+            [
+                "22e9e617.9da17a",
+                "7098d6b.cf530a8"
+            ]
+        ]
+    },
+    {
+        "id": "cab4af10.969f8",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Up 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "up",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 920,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "64642c8c.92e8b4",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Right 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "right",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 1000,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "efeecbd.4d9d938",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Forward 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "forward",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 1080,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "e33d15d5.5ddd38",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Down 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "down",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 960,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "75782a4a.1755cc",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Left 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "left",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 1040,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "9d30190f.77914",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Back 50cm",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "back",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "50",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 1120,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "3a6bdf2a.d6f1e8",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "cw 90º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "cw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "90",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 1160,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "167c4cc9.a7585b",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "ccw 90º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "ccw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "90",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 1200,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "52aa27b3.22bd6",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Flip f",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "flip",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "f",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 1280,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "9087b781.e11688",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Up 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 920,
+        "wires": [
+            [
+                "cab4af10.969f8"
+            ]
+        ]
+    },
+    {
+        "id": "86776920.b5ad58",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Down 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 170,
+        "y": 960,
+        "wires": [
+            [
+                "e33d15d5.5ddd38"
+            ]
+        ]
+    },
+    {
+        "id": "356aea66.848346",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Right 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 1000,
+        "wires": [
+            [
+                "64642c8c.92e8b4"
+            ]
+        ]
+    },
+    {
+        "id": "1ee1f7d3.d1c0f",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Left 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 1040,
+        "wires": [
+            [
+                "75782a4a.1755cc"
+            ]
+        ]
+    },
+    {
+        "id": "f6a41339.df434",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Forward 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 170,
+        "y": 1080,
+        "wires": [
+            [
+                "efeecbd.4d9d938"
+            ]
+        ]
+    },
+    {
+        "id": "da0876.c919b788",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Back 50cm",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 1120,
+        "wires": [
+            [
+                "9d30190f.77914"
+            ]
+        ]
+    },
+    {
+        "id": "6d86a82e.d14e",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "cw 90º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 1160,
+        "wires": [
+            [
+                "3a6bdf2a.d6f1e8"
+            ]
+        ]
+    },
+    {
+        "id": "2acfb56f.75b3c2",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Full 360º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 1240,
+        "wires": [
+            [
+                "5fb76fe6.77055"
+            ]
+        ]
+    },
+    {
+        "id": "d4e0659e.2a5ee8",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Flip forward",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 1280,
+        "wires": [
+            [
+                "52aa27b3.22bd6"
+            ]
+        ]
+    },
+    {
+        "id": "e461a5fe.4bab48",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "ccw 90º",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 150,
+        "y": 1200,
+        "wires": [
+            [
+                "167c4cc9.a7585b"
+            ]
+        ]
+    },
+    {
+        "id": "5fb76fe6.77055",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "cw 360º",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "cw",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellovalue",
+                "pt": "msg",
+                "to": "360",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 1240,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "7b3ad0a3.8c8928",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Emergency",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.tellocmd",
+                "pt": "msg",
+                "to": "emergency",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 880,
+        "wires": [
+            [
+                "46487f23.1b0dc"
+            ]
+        ]
+    },
+    {
+        "id": "f5b7074.9edf6f8",
+        "type": "inject",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Emergency",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 160,
+        "y": 880,
+        "wires": [
+            [
+                "7b3ad0a3.8c8928"
+            ]
+        ]
+    },
+    {
+        "id": "3ce0687e.35578",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Land",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "land",
+        "payloadType": "str",
+        "topic": "",
+        "x": 330,
+        "y": 740,
+        "wires": [
+            [
+                "9b241806.f3b488"
+            ]
+        ]
+    },
+    {
+        "id": "70adb65d.d47e1",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Takeoff",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 340,
+        "y": 780,
+        "wires": [
+            [
+                "3a5f0009.46f7c"
+            ]
+        ]
+    },
+    {
+        "id": "f15e416a.f2f3f",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 17,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Up (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-up",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 350,
+        "y": 900,
+        "wires": [
+            [
+                "cab4af10.969f8"
+            ]
+        ]
+    },
+    {
+        "id": "3025858a.535752",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 18,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Down (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-down",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 350,
+        "y": 940,
+        "wires": [
+            [
+                "e33d15d5.5ddd38"
+            ]
+        ]
+    },
+    {
+        "id": "e54b16a0.57d4d8",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 19,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Right (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-right",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 350,
+        "y": 980,
+        "wires": [
+            [
+                "64642c8c.92e8b4"
+            ]
+        ]
+    },
+    {
+        "id": "fdf3c37d.2ef818",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 20,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Left (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-arrow-left",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 350,
+        "y": 1020,
+        "wires": [
+            [
+                "75782a4a.1755cc"
+            ]
+        ]
+    },
+    {
+        "id": "ca00740a.5daf3",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 21,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Forward (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-forward",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 360,
+        "y": 1060,
+        "wires": [
+            [
+                "efeecbd.4d9d938"
+            ]
+        ]
+    },
+    {
+        "id": "7f2db1d9.e0a098",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 22,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Backward (50cm)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-backward",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 370,
+        "y": 1100,
+        "wires": [
+            [
+                "9d30190f.77914"
+            ]
+        ]
+    },
+    {
+        "id": "b2467019.895798",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 23,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clockwise (90º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 360,
+        "y": 1140,
+        "wires": [
+            [
+                "3a6bdf2a.d6f1e8"
+            ]
+        ]
+    },
+    {
+        "id": "5e42337f.f0eedc",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Counter Clockwise",
+        "group": "d6c71110.8254d8",
+        "order": 24,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Anti-Clockwise (90º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-undo",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 370,
+        "y": 1180,
+        "wires": [
+            [
+                "167c4cc9.a7585b"
+            ]
+        ]
+    },
+    {
+        "id": "9d2725b0.556d3",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 25,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Full Rotation (360º)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 370,
+        "y": 1220,
+        "wires": [
+            [
+                "5fb76fe6.77055"
+            ]
+        ]
+    },
+    {
+        "id": "7dcf623e.d1529c",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 26,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Flip (forward)",
+        "color": "",
+        "bgcolor": "",
+        "icon": "fa-repeat",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 350,
+        "y": 1260,
+        "wires": [
+            [
+                "52aa27b3.22bd6"
+            ]
+        ]
+    },
+    {
+        "id": "86166f4.a053c9",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "d6c71110.8254d8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Emergency Stop",
+        "color": "",
+        "bgcolor": "red",
+        "icon": "fa-stop-circle",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 360,
+        "y": 860,
+        "wires": [
+            [
+                "7b3ad0a3.8c8928"
+            ]
+        ]
+    },
+    {
+        "id": "e54cf4e4.814598",
+        "type": "comment",
+        "z": "c4b97d8e.d8bfe",
+        "name": "================================ Send Tello SDK Commands =========================",
+        "info": "For a list of Tello SDK commands, visit\nhttps://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf",
+        "x": 410,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "cf14a776.da7018",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Toggle VisualRecognition",
+        "rules": [
+            {
+                "t": "set",
+                "p": "VisualRecognition",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "34d602e3.483876",
+        "type": "ui_button",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "group": "79c2e769.ba6a88",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Stop Visual Recognition",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "topic": "",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "cf14a776.da7018"
+            ]
+        ]
+    },
+    {
+        "id": "682a33e3.fecc2c",
+        "type": "switch",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Check VisualRecognition",
+        "property": "VisualRecognition",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 430,
+        "y": 80,
+        "wires": [
+            [
+                "caf06c03.1a2a2"
+            ]
+        ]
+    },
+    {
+        "id": "7f4fae32.c949b8",
+        "type": "ui_text_input",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "label": "Watson Visual Recognition custom classifier",
+        "group": "79c2e769.ba6a88",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "",
+        "x": 230,
+        "y": 460,
+        "wires": [
+            [
+                "9fc2b280.907a8"
+            ]
+        ]
+    },
+    {
+        "id": "6078b2a.8e7e94c",
+        "type": "ui_text",
+        "z": "c4b97d8e.d8bfe",
+        "group": "79c2e769.ba6a88",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Custom Classifier prompt",
+        "label": "If you have created a Watson Visual Recognition custom classifier for drone image detection, enter the classifier ID here:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 170,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "415b7c4a.8ebbac",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 770,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "9fc2b280.907a8",
+        "type": "change",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "vr_classifier",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 460,
+        "wires": [
+            [
+                "415b7c4a.8ebbac"
+            ]
+        ]
+    },
+    {
+        "id": "a4a18aac.3a46e8",
+        "type": "debug",
+        "z": "c4b97d8e.d8bfe",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "params",
+        "x": 530,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "ebf85fdd.292a58",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Set Custom Classifier",
+        "func": "msg.params = {};\nvar CustomClassifier = flow.get(\"vr_classifier\") || \"\";\n\nif( CustomClassifier.length ) {\n  // msg.params[\"classifier_ids\"]=\"food,default\";\n    msg.params.classifier_ids = CustomClassifier + \",default\";  \n} else {\n    msg.params.classifier_ids = \"default\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 300,
+        "y": 580,
+        "wires": [
+            [
+                "469c8cbe.f03e6c",
+                "a4a18aac.3a46e8"
+            ]
+        ]
+    },
+    {
+        "id": "ad334a69.45194",
+        "type": "function",
+        "z": "c4b97d8e.d8bfe",
+        "name": "Process Results - Multiple Classifiers",
+        "func": "if (typeof msg.result == 'undefined') {\n    return null;\n}\n\nif (typeof msg.result.error != 'undefined') {\n    //The Lite Plan allows users to make 7,500 API calls for free\n    // Daily limit is  (up to 250 calls per day)\n    // {\"status\":\"ERROR\",\"statusInfo\":\"Key is over transaction limit\"}\n    msg.template = msg.result.error.message;\n    return msg;\n}\n\n// Text Extraction\nif (typeof msg.result.images[0].text != 'undefined') {\n    var image_text = msg.result.images[0].text;\n    msg.payload = image_text;\n    msg.template = image_text;\n    if( image_text.length >0 ) {\n       msg.template= \"Watson found the words: \"+image_text;\n    }\n    return msg;\n}\n\nvar c_id = 0;\nvar WhichClassifier = [];\n\nfor ( c_id=0; c_id < (msg.result.images[0].classifiers.length); c_id++ ){\n    var bestcolor = -1;\n    var colorscore = 0;\n    var item = \"\";\n    // find the best color, if any\n    for( i =0; i<(msg.result.images[0].classifiers[c_id].classes.length); i++ ){\n      if( typeof msg.result.images[0].classifiers[c_id].classes[i] != 'undefined') {\n          if( typeof msg.result.images[0].classifiers[c_id].classes[i].class != 'undefined') {\n              var object = msg.result.images[0].classifiers[c_id].classes[i].class;\n              if ( object.includes(\"color\") ) {\n                if( msg.result.images[0].classifiers[c_id].classes[i].score > colorscore){\n                    bestcolor = i;\n                    colorscore = msg.result.images[0].classifiers[c_id].classes[i].score;\n                }\n              }\n          }  \n      }  \n    }\n\n    var bestItem = 0;\n    var itemScore = 0;\n    for( i =0; i<(msg.result.images[0].classifiers[c_id].classes.length); i++ ){\n      if( typeof msg.result.images[0].classifiers[c_id].classes[i] != 'undefined') {\n        if( typeof msg.result.images[0].classifiers[c_id].classes[i].class != 'undefined') {\n          var object = msg.result.images[0].classifiers[c_id].classes[i].class;\n          if ( !object.includes(\"color\") ) {\n           if( msg.result.images[0].classifiers[c_id].classes[i].score > itemScore){\n  //            bestItem = i;\n              bestItem = 0;\n              itemScore =  msg.result.images[0].classifiers[c_id].classes[i].score;\n              }\n          }\n        }\n      }  \n    }\n\n     if( bestcolor != \"-1\") {\n        // found a color\n        if( msg.result.images[0].classifiers[c_id].classes.length > 0) {\n            if( typeof msg.result.images[0].classifiers[c_id].classes[bestcolor].class != 'undefined') {\n                item = msg.result.images[0].classifiers[c_id].classes[bestcolor].class + \" \" + msg.result.images[0].classifiers[c_id].classes[bestItem].class;\n            }\n        }\n        bestcolor = -1;\n    } else {\n       if( msg.result.images[0].classifiers[c_id].classes.length > 0) {\n           if( typeof msg.result.images[0].classifiers[c_id].classes[bestItem].class != 'undefined') {\n                item = msg.result.images[0].classifiers[c_id].classes[bestItem].class;\n           }     \n       }     \n    }\n    \n    if( item.length ) {\n        WhichClassifier.push(\"Watson's \" + msg.result.images[0].classifiers[c_id].name + \" classifier thinks this picture contains a \" + item +\".<br>\");\n    } else {\n        WhichClassifier.push(\"The \"+msg.result.images[0].classifiers[c_id].name+\" classifier did not detect any objects in this picture.\");\n    }    \n            \n}\n\nvar picInfo = msg.result.images[0].classifiers[0].classes;\nvar arrayLength = picInfo.length;\nmsg.template=\"<style>\";\nmsg.template=msg.template+\"table { width: 440px; margin-top: 10px; }\";\nmsg.template=msg.template+\"tr:nth-child(even){background-color: #f2f2f2;}\";\nmsg.template=msg.template+\"th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; width: 10%;}\";\nmsg.template=msg.template+\"</style>\";\n\n// 1st Table\nmsg.template=msg.template+\"<h2>\"+WhichClassifier[0]+\"</h2>\";\nif( arrayLength ) {\n    msg.template=msg.template+\"<table span=100%><tr><th>Class</th><th>Confidence</th></tr>\";\n    for (var i = 0; i < arrayLength; i++) {\n      msg.template = msg.template + \"<tr><td>\" + picInfo[i].class + \"</td><td>\" + picInfo[i].score + \"</td></tr>\";\n    }\n    msg.template = msg.template + \"</table>\";\n}\n\nvar picInfo = msg.result.images[0].classifiers[1].classes;\nvar arrayLength = picInfo.length;\n\n// 2nd Table\n    msg.template=msg.template+\"<h2>\"+WhichClassifier[1]+\"</h2>\";\nif( arrayLength ) {\n    msg.template=msg.template+\"<table span=100%><tr><th>Class</th><th>Confidence</th></tr>\";\n    for (var i = 0; i < arrayLength; i++) {\n      msg.template = msg.template + \"<tr><td>\" + picInfo[i].class + \"</td><td>\" + picInfo[i].score + \"</td></tr>\";\n    }\n    msg.template = msg.template + \"</table>\";\n}\nmsg.payload=msg.template;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 580,
+        "wires": [
+            [
+                "fcc4b449.c81f38",
+                "35c9be9a.f0ffba"
+            ]
+        ]
+    },
+    {
+        "id": "79c2e769.ba6a88",
+        "type": "ui_group",
+        "z": "",
+        "name": "Camera",
+        "tab": "7cefa208.eea37c",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "ec122567.2dd23",
+        "type": "ui_group",
+        "z": "",
+        "name": "Results",
+        "tab": "7cefa208.eea37c",
+        "order": 3,
+        "disp": true,
+        "width": "9",
+        "collapse": false
+    },
+    {
+        "id": "d6c71110.8254d8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Controls",
+        "tab": "7cefa208.eea37c",
+        "order": 1,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "7cefa208.eea37c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Tello Camera Dashboard",
+        "icon": "dashboard",
+        "order": 7
+    }
+]

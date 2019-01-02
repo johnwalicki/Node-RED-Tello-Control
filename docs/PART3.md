@@ -34,6 +34,6 @@ There is a [solution flow](/flows/solutions/part3_solution.json) available if yo
 
 ---
 
-[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | **Commands** | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md)
+[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | **Commands** | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | [Pictures](/docs/PART7.md) | [Visual Recognition](/docs/PART8.md) | [Custom Classifier](/docs/PART9.md)
 
 ---

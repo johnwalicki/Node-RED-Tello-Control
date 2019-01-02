@@ -13,6 +13,6 @@ Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu 
 ![Tello Pictures Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-Pictures-Solution.png?raw=true "Tello Pictures Dashboard Solution")
 ---
 
-[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | **Pictures** | [Visual Recognition](/docs/PART8.md)
+[Home](/README.md) | [Node-RED](/docs/PART1.md) | [Setup](/docs/PART2.md) | [Commands](/docs/PART3.md) | [Dashboard](/docs/PART4.md) | [Telemetry](/docs/PART5.md) | [Mission](/docs/PART6.md) | **Pictures** | [Visual Recognition](/docs/PART8.md) | [Custom Classifier](/docs/PART9.md)
 
 ---
