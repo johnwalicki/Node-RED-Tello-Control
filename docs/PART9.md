@@ -29,7 +29,7 @@ Follow the instructions in this [tutorial](https://developer.ibm.com/tutorials/d
 - TakeO-Off
 - See screenshot:
 
-![Tello Watson Visual Recognition API Key](/docs/screenshots/NodeRED-Tello-VisualRecognition-APIkey.png?raw=true "Tello Watson Visual Recognition API Key")
+![Tello Custom Classifier Visual Recognition Dashboard Solution](/docs/screenshots/NodeRED-Tello-CustomClassifierVisualRecognition-Dashboard.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution")
 
 ### Solution
 
