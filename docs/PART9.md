@@ -35,7 +35,7 @@ Follow the instructions in this [tutorial](https://developer.ibm.com/tutorials/d
 
 There is a [solution flow](/flows/solutions/part9_solution.json) available if you need help or want to check your solution.
 
-![Tello Custom Classifier Visual Recognition Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-VisualRecognition-Solution-flow.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution flow")
+![Tello Custom Classifier Visual Recognition Dashboard Solution flow](/docs/screenshots/NodeRED-Tello-CustomClassifierVisualRecognition-Solution-flow.png?raw=true "Tello Custom Classifier Visual Recognition Dashboard Solution flow")
 
 Launch the Node-RED Dashboard by turning to the Dashboard tab in the right menu and then click on the launch button.
 
