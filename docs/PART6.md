@@ -1,6 +1,6 @@
 # Create missions for your drone
 
-You can create subflows in Node-RED.  A subflow acts like a function in other programming languages.  You can capture an existing flow, or part of a flow, into a subflow or create a subflow from scratch.  The subflows appear in the pallet and look like any other nodes in the pallet.  You can then drag the subflow nodes onto the pallet to run the flow within the subflow.
+You can create subflows in Node-RED.  A subflow acts like a function in other programming languages.  You can capture an existing flow, or part of a flow, into a subflow or create a subflow from scratch.  The subflows appear in the palette and look like any other nodes in the palette.  You can then drag the subflow nodes onto the palette to run the flow within the subflow.
 
 <- video here ->
 
