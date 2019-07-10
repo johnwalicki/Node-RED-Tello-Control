@@ -1,6 +1,6 @@
 # Send SDK commands to the Tello drone
 
-Now that Node-RED is setup and configured we will start to send commands to the drone.  The SDK documentation, available from [the Ryze downloads page](https://www.ryzerobotics.com/tello-edu/downloads) details all the available commands.
+Now that Node-RED is setup and configured we will start to send commands to the drone.  If you have a new Tello Drone, you must use the Tello mobile app at least once to activate the drone before using the SDK programming toolkit. The SDK documentation, available from [the Ryze downloads page](https://www.ryzerobotics.com/tello-edu/downloads) details all the available commands.
 
 The video below shows how commands are sent using the UDP node and also shows how the starter flow was created.
 
