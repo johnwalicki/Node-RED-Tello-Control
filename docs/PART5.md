@@ -1,19 +1,21 @@
 # Receive telemetry data from the drone
 In Part 4 you constructed a Node-RED Dashboard flow to send commands to the drone. In this Part 5 exercise, we will create a Node-RED Dashboard with gauges and charts to display telemetry data from the drone.
 
-The video below shows how gauge nodes can be configured to display the telemetry data from the drone.
-
-<- Add video here ->
-
 ## Receiving Tello Telemetry Data
 
 Open port 8890/udp in your laptop firewall to receive Tello telemetry data.
 
-On Linux
+### Linux
 ```
 $ sudo firewall-cmd --permanent --add-port=8890/udp
 ```
 
+If you want to list open ports, run this command:
+```
+$ sudo firewall-cmd --permanent --list-ports
+```
+
+### Mac OSX
 On Mac, use System Preferences to open the ports.
 - Open System Preferences > Security & Privacy > Firewall > Firewall Options
 - Click the + / Add button
