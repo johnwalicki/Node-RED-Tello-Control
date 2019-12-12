@@ -4,10 +4,14 @@ In Part 4 you constructed a Node-RED Dashboard flow to send commands to the dron
 ## Receiving Tello Telemetry Data
 
 Open port 8890/udp in your laptop firewall to receive Tello telemetry data.
+If you want to turn on the video stream, you will need to open port 11111/udp.
+Send commands and receive responses from the drone on port 8889/udp.
 
 ### Linux
 ```
 $ sudo firewall-cmd --permanent --add-port=8890/udp
+$ sudo firewall-cmd --permanent --add-port=8889/udp
+$ sudo firewall-cmd --permanent --add-port=11111/udp
 ```
 
 If you want to list open ports, run this command:
