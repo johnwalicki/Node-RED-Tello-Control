@@ -13,7 +13,10 @@ $ sudo firewall-cmd --permanent --add-port=8890/udp
 $ sudo firewall-cmd --permanent --add-port=8889/udp
 $ sudo firewall-cmd --permanent --add-port=11111/udp
 ```
-
+Then reload the firewall to effect the changes:
+```
+$ sudo firewall-cmd --reload
+```
 If you want to list open ports, run this command:
 ```
 $ sudo firewall-cmd --permanent --list-ports
