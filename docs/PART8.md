@@ -1,5 +1,8 @@
 # Use Visual Recognition on drone pictures
 
+### Alert - **[Watson Visual Recognition service](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-index) has been discontinued**
+The steps in this section are no longer available.
+
 The Tello has a low level protocol that allows you to take pictures.  This flow sends the take picture command and receives / reconstructs the picture data from the Tello.  Then it calls the Watson Visual Recognition service to classify what is in the image.
 
 ## Task

@@ -1,5 +1,8 @@
 # Fly the Tello drone with custom Visual Recognition of drone pictures
 
+### Alert - **[Watson Visual Recognition service](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-index) has been discontinued**
+The steps in this section are no longer available.
+
 Now that the Tello is taking pictures and classifying images using the default classifier, in this final challenge the Tello will fly, take pictures, classify images using a custom classifier.
 
 ## Task
